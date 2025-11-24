@@ -210,16 +210,8 @@
     line-height: 1.3;
   }
 
-  .card-details p:last-child {
-    margin-bottom: 0;
-  }
-
   .card-details.show {
     display: block;
-  }
-
-  .card-details strong {
-    font-weight: 700;
   }
 
 </style>
@@ -268,6 +260,7 @@
 
     <h1 class="app-title">Aseo_Dimao</h1>
     
+    <!-- TARJETA DEMO (Aquí después pegas todas las demás que tienes) -->
     <div class="card">
       <div class="card-header">
         <div class="card-main-info">
@@ -283,12 +276,11 @@
         <p><strong>Departamento:</strong> Aseo</p>
         <p><strong>Encargado:</strong> Sebastián Carrillo</p>
         <p><strong>Personas:</strong> 10</p>
-        <p><strong>Funciones:</strong> Personal Administrativo divido en ciertas áreas de trabajo, tales como: Atención telefónica, atención a público, tickets, solicitudes, apoyo técnico en licitaciones, logística, compras, análisis de datos, remuneraciones, sobreproducción, gestión en terreno y secretaría.</p>
+        <p><strong>Funciones:</strong> Personal Administrativo dividido en áreas de trabajo.</p>
         <p><strong>Días:</strong> Lunes a Viernes</p>
         <p><strong>Horarios:</strong> 08:30 a 17:20</p>
       </div>
     </div>
-
 
   </div> <!-- cierre app-container -->
 
@@ -323,16 +315,13 @@ buttons.forEach(btn => {
   btn.addEventListener('click', () => {
     const targetSelector = btn.getAttribute('data-target');
     const details = document.querySelector(targetSelector);
-    const isOpen = details.classList.contains('show');
 
-    if (isOpen) {
+    if (details.classList.contains('show')) {
       details.classList.remove('show');
       btn.textContent = '+';
-      btn.setAttribute('aria-expanded', 'false');
     } else {
       details.classList.add('show');
       btn.textContent = '−';
-      btn.setAttribute('aria-expanded', 'true');
     }
   });
 });
@@ -341,8 +330,4 @@ buttons.forEach(btn => {
 </body>
 </html>
 
-
-
-    <!-- Tarjetas generadas desde tu Excel -->
-    <!-- (TODO TU CONTENIDO SIGUE IGUAL) -->
 
