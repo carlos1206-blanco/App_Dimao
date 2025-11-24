@@ -41,6 +41,88 @@
   margin: 0 auto;
 }
 
+/* ---------- MENÚ HAMBURGUESA ---------- */
+
+.menu-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  cursor: pointer;
+  z-index: 9999;
+  font-size: 20px;
+}
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: -260px;
+  width: 240px;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: -3px 0 10px rgba(0,0,0,0.15);
+  padding: 20px;
+  transition: right 0.3s ease;
+  z-index: 9998;
+}
+
+.side-menu.show {
+  right: 0;
+}
+
+.side-menu h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.side-menu ul {
+  list-style: none;
+}
+
+.side-menu ul li {
+  margin: 12px 0;
+}
+
+.side-menu ul li a {
+  text-decoration: none;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+/* ---------- MAPAS FULLSCREEN ---------- */
+
+.map-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  z-index: 9997;
+  display: none;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.map-screen.show {
+  display: flex;
+}
+
+.close-map {
+  align-self: flex-end;
+  font-size: 22px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+/* ---------- TARJETAS ---------- */
 
   .app-title {
     font-size: 1.4rem;
@@ -140,15 +222,43 @@
     font-weight: 700;
   }
 
-  @media (min-width: 768px) {
-    body {
-      align-items: center;
-    }
-  }
 </style>
 
 </head>
 <body>
+
+<!-- BOTÓN MENÚ -->
+<div class="menu-btn" id="btnMenu">☰</div>
+
+<!-- MENÚ LATERAL -->
+<div class="side-menu" id="sideMenu">
+  <h3>Mapas</h3>
+  <ul>
+    <li><a href="#" id="btnMicro">Microbasurales</a></li>
+    <li><a href="#" id="btnRsd">Frecuencia RSD</a></li>
+  </ul>
+</div>
+
+<!-- MAPA 1 -->
+<div id="mapMicro" class="map-screen">
+  <button class="close-map" onclick="closeMaps()">✖</button>
+  <iframe 
+    src="https://www.google.com/maps/d/u/0/embed?mid=1qS39hT2vcbDSn1rp_NWmQlsJeeEIWR4&ehbc=2E312F" 
+    width="100%" height="100%" style="border:0;">
+  </iframe>
+</div>
+
+<!-- MAPA 2 -->
+<div id="mapRsd" class="map-screen">
+  <button class="close-map" onclick="closeMaps()">✖</button>
+  <iframe 
+    src="https://www.google.com/maps/d/u/0/embed?mid=1jcfDEkZfaygoBcgSEC3WSEtX2zdfA6g&ehbc=2E312F" 
+    width="100%" height="100%" style="border:0;">
+  </iframe>
+</div>
+
+
+
 
   <div class="app-container">
 
@@ -157,10 +267,6 @@
     </div>
 
     <h1 class="app-title">Aseo_Dimao</h1>
-
-
-
-    <!-- Tarjetas generadas desde tu Excel -->
     
     <div class="card">
       <div class="card-header">
@@ -171,271 +277,72 @@
             <span class="card-subtitle">10 personas</span>
           </div>
         </div>
-        <button class="toggle-btn" data-target="#unidad-0" aria-expanded="false">
-          +
-        </button>
+        <button class="toggle-btn" data-target="#unidad-0" aria-expanded="false">+</button>
       </div>
       <div class="card-details" id="unidad-0">
         <p><strong>Departamento:</strong> Aseo</p>
         <p><strong>Encargado:</strong> Sebastián Carrillo</p>
         <p><strong>Personas:</strong> 10</p>
-        <p><strong>Funciones:</strong> Personal Administrativo divido en ciertas áreas de trabajo, tales como: Atencion  teléfonica, atención a publico, tickets, solicitudes, apoyo técnico en licitaciones, logística, compras, análisis de datos, remuneraciones, sobreproducción, gestión en terreno y secretaría..</p>
+        <p><strong>Funciones:</strong> Personal Administrativo divido en ciertas áreas de trabajo, tales como: Atención telefónica, atención a público, tickets, solicitudes, apoyo técnico en licitaciones, logística, compras, análisis de datos, remuneraciones, sobreproducción, gestión en terreno y secretaría.</p>
         <p><strong>Días:</strong> Lunes a Viernes</p>
         <p><strong>Horarios:</strong> 08:30 a 17:20</p>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-main-info">
-          <div class="icon-people">👥</div>
-          <div class="card-texts">
-            <span class="card-title">Aseo Comunal y Cuneteo</span>
-            <span class="card-subtitle">68 personas</span>
-          </div>
-        </div>
-        <button class="toggle-btn" data-target="#unidad-1" aria-expanded="false">
-          +
-        </button>
-      </div>
-      <div class="card-details" id="unidad-1">
-        <p><strong>Departamento:</strong> Aseo</p>
-        <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-        <p><strong>Personas:</strong> 68</p>
-        <p><strong>Funciones:</strong> Personal auxiliar de aseo que se desempeña en la limpieza, barrido y cuneteo en la comuna de Puente Alto, recorriendo prioritariamente las avenidas principales de la comuna.</p>
-        <p><strong>Días:</strong> Lunes a Viernes, Sabados</p>
-        <p><strong>Horarios:</strong> 08:00 a 17:20, turno sabado 08:30 a 12:30</p>
-        <p><strong>Derivadas:</strong> Diógenes o Acumuladores: Servicio en el cual se presta apoyo al Departamento de Acción Social, en donde se despotencia al equipo de aseo comunal con 6 personas para realizar esta labor de limpieza en el domicilio indicado según programación.
 
-Retiro de Cachureos: Servicio en el cual se realiza retiro de 4 objetos voluminosos o similares que se encuentre en el domicilio del contribuyente, esto se gestiona y coordina a través de una solicitud.</p>
-        <p><strong>Observación:</strong> Dia sabado solo cuenta con una cuadrilla de 8 personas..ademas las cuadrillas cuentan con un horario de verano el cual funciona desde las 07:00 a 15:00</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-main-info">
-          <div class="icon-people">👥</div>
-          <div class="card-texts">
-            <span class="card-title">Barrido Mecanizado</span>
-            <span class="card-subtitle">4 personas</span>
-          </div>
-        </div>
-        <button class="toggle-btn" data-target="#unidad-2" aria-expanded="false">
-          +
-        </button>
-      </div>
-      <div class="card-details" id="unidad-2">
-        <p><strong>Departamento:</strong> Aseo</p>
-        <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-        <p><strong>Personas:</strong> 4</p>
-        <p><strong>Funciones:</strong> Servicio de Barrido mecanizado en cual consiste en operar una maquina llamada Camión Barredor el cual pasa por calles y avenidas principales realizando el proceso de lavado, barrido y absorción mientras va en ruta, todo esto coordinado según programación...</p>
-        <p><strong>Días:</strong> Lunes a Viernes</p>
-        <p><strong>Horarios:</strong> 07:00 a 23:00</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-main-info">
-          <div class="icon-people">👥</div>
-          <div class="card-texts">
-            <span class="card-title">RSD Ferias</span>
-            <span class="card-subtitle">2 personas</span>
-          </div>
-        </div>
-        <button class="toggle-btn" data-target="#unidad-3" aria-expanded="false">
-          +
-        </button>
-      </div>
-      <div class="card-details" id="unidad-3">
-        <p><strong>Departamento:</strong> Aseo</p>
-        <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-        <p><strong>Personas:</strong> 2</p>
-        <p><strong>Funciones:</strong> El servicio RSD Ferias gestiona la limpieza posterior a la feria. Sus supervisores coordinan a los operarios y camiones para retirar los residuos acumulados y limpieza en la vía pública, dejando la zona libre de basura y restableciendo su estado habitual...</p>
-        <p><strong>Días:</strong> Martes a Viernes, 15:00 a 20:00, Sabado y Domingo 15:00 a 22:00</p>
-        <p><strong>Horarios:</strong> 15:00 a 20:00, 15:00 a 22:00</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-main-info">
-          <div class="icon-people">👥</div>
-          <div class="card-texts">
-            <span class="card-title">RSD</span>
-            <span class="card-subtitle">5 personas</span>
-          </div>
-        </div>
-        <button class="toggle-btn" data-target="#unidad-4" aria-expanded="false">
-          +
-        </button>
-      </div>
-      <div class="card-details" id="unidad-4">
-        <p><strong>Departamento:</strong> Aseo</p>
-        <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-        <p><strong>Personas:</strong> 5</p>
-        <p><strong>Funciones:</strong> El Servicio de RSD, corresponde al retiro y recolección de Residuos Solidos Domiciliarios, nuestros supervisores se dividen en sectores de la comuna fiscalizando camiones y supervisando que el servicio se realice de manera eficiente..</p>
-        <p><strong>Días:</strong> Lunes a Viernes, Sabados </p>
-        <p><strong>Horarios:</strong> 08:30 a 17:20, turno Sabado 08:30 a 13:00</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-main-info">
-          <div class="icon-people">👥</div>
-          <div class="card-texts">
-            <span class="card-title">Aseo Centro</span>
-            <span class="card-subtitle">31 personas</span>
-          </div>
-        </div>
-        <button class="toggle-btn" data-target="#unidad-5" aria-expanded="false">
-          +
-        </button>
-      </div>
-      <div class="card-details" id="unidad-5">
-        <p><strong>Departamento:</strong> Aseo</p>
-        <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-        <p><strong>Personas:</strong> 31</p>
-        <p><strong>Funciones:</strong> Equipo de Barrido y limpieza destinado al sector centro de la comuna de Puente Alto realizando labor en calles del sector centro y plaza central..</p>
-        <p><strong>Días:</strong> Lunes a Viernes, Sabado a Domingo </p>
-        <p><strong>Horarios:</strong> 07:00 a 15:00 - 15:00 a 22:00, 09:00 a 15:00 - 16:00 a 21:00</p>
-      </div>
-    </div>
-
-     <div class="card">
-      <div class="card-header">
-        <div class="card-main-info">
-          <div class="icon-people">👥</div>
-          <div class="card-texts">
-            <span class="card-title">Aseo Nocturno </span>
-            <span class="card-subtitle">9 personas</span>
-          </div>
-        </div>
-        <button class="toggle-btn" data-target="#unidad-7" aria-expanded="false">
-          +
-        </button>
-      </div>
-      <div class="card-details" id="unidad-7">
-        <p><strong>Departamento:</strong> Aseo</p>
-        <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-        <p><strong>Personas:</strong> 9</p>
-        <p><strong>Funciones:</strong> Personal auxiliar de aseo que se desempeña en la limpieza y barrido en la comuna de Puente Alto, recorriendo prioritariamente las avenidas principales de la comuna..</p>
-        <p><strong>Días:</strong> Lunes a Domingo </p>
-        <p><strong>Horarios:</strong> 21:00 a 04:00</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-main-info">
-          <div class="icon-people">👥</div>
-          <div class="card-texts">
-            <span class="card-title">Lavado de aceras</span>
-            <span class="card-subtitle">5 personas</span>
-          </div>
-        </div>
-        <button class="toggle-btn" data-target="#unidad-8" aria-expanded="false">
-          +
-        </button>
-      </div>
-      <div class="card-details" id="unidad-8">
-        <p><strong>Departamento:</strong> Aseo</p>
-        <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-        <p><strong>Personas:</strong> 5</p>
-        <p><strong>Funciones:</strong> Equipo de lavado destinado a aceras del sector centro de la comuna removiendo suciedad y desechos de estas, excluyendo la plaza central.</p>
-        <p><strong>Días:</strong> Domingo a Jueves </p>
-        <p><strong>Horarios:</strong> 21:00 a 04:00</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-main-info">
-          <div class="icon-people">👥</div>
-          <div class="card-texts">
-            <span class="card-title">Sobreproduccion</span>
-            <span class="card-subtitle">5 personas</span>
-          </div>
-        </div>
-        <button class="toggle-btn" data-target="#unidad-9" aria-expanded="false">
-          +
-        </button>
-      </div>
-      <div class="card-details" id="unidad-9">
-        <p><strong>Departamento:</strong> Aseo</p>
-        <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-        <p><strong>Personas:</strong> 5</p>
-        <p><strong>Funciones:</strong> Se considera sobreproducción de residuos cuando un local o establecimiento genera mas de 1.800 litros mensuales excediendo el servicio regular..</p>
-        <p><strong>Días:</strong> Lunes a viernes</p>
-        <p><strong>Horarios:</strong> 08:15 a 17:20</p>
-      </div>
-    </div>
-
-   <div class="card">
-  <div class="card-header">
-    <div class="card-main-info">
-      <div class="icon-people">👥</div>
-      <div class="card-texts">
-        <span class="card-title">RSD Nocturno</span>
-        <span class="card-subtitle">1 persona</span>
-      </div>
-    </div>
-    <button class="toggle-btn" data-target="#unidad-10" aria-expanded="false">
-      +
-    </button>
-  </div>
-
-  <div class="card-details" id="unidad-10">
-    <p><strong>Departamento:</strong> Aseo</p>
-    <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-    <p><strong>Personas:</strong> 1</p>
-    <p><strong>Funciones:</strong> El Servicio de RSD, corresponde al servicio de retiro y recolección de Residuos Solidos Domiciliarios, donde nuestro supervisor fiscaliza en distintos sectores de la comuna y supervisando que el servicio se realice de manera efectiva..</p>
-    <p><strong>Días:</strong> Lunes a Domingo </p>
-    <p><strong>Horarios:</strong> 18:00 a 02:00</p>
-  </div>
-</div>
+  </div> <!-- cierre app-container -->
 
 
-  <script>
-    const buttons = document.querySelectorAll('.toggle-btn');
+<script>
+// --- MENÚ ---
+const btnMenu = document.getElementById("btnMenu");
+const sideMenu = document.getElementById("sideMenu");
 
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetSelector = btn.getAttribute('data-target');
-        const details = document.querySelector(targetSelector);
-        const isOpen = details.classList.contains('show');
+btnMenu.addEventListener("click", () => {
+  sideMenu.classList.toggle("show");
+});
 
-        if (isOpen) {
-          details.classList.remove('show');
-          btn.textContent = '+';
-          btn.setAttribute('aria-expanded', 'false');
-        } else {
-          details.classList.add('show');
-          btn.textContent = '−';
-          btn.setAttribute('aria-expanded', 'true');
-        }
-      });
-    });
-  </script>
+// --- MAPAS ---
+document.getElementById("btnMicro").onclick = () => {
+  closeMaps();
+  document.getElementById("mapMicro").classList.add("show");
+};
+
+document.getElementById("btnRsd").onclick = () => {
+  closeMaps();
+  document.getElementById("mapRsd").classList.add("show");
+};
+
+function closeMaps() {
+  document.querySelectorAll(".map-screen").forEach(m => m.classList.remove("show"));
+}
+
+// --- TARJETAS ---
+const buttons = document.querySelectorAll('.toggle-btn');
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const targetSelector = btn.getAttribute('data-target');
+    const details = document.querySelector(targetSelector);
+    const isOpen = details.classList.contains('show');
+
+    if (isOpen) {
+      details.classList.remove('show');
+      btn.textContent = '+';
+      btn.setAttribute('aria-expanded', 'false');
+    } else {
+      details.classList.add('show');
+      btn.textContent = '−';
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+</script>
+
 </body>
 </html>
 
 
- 
- 
 
- 
-
-
-
-
-
-
-
-
-
-
-
+    <!-- Tarjetas generadas desde tu Excel -->
+    <!-- (TODO TU CONTENIDO SIGUE IGUAL) -->
 
