@@ -253,6 +253,8 @@
     <img src="img/logo_aseo.png" class="logo-aseo" alt="Logo Departamento de Aseo">
   </div>
   <h1 class="app-title">Aseo_Dimao</h1>
+  <div id="personalCard"></div>
+
 
   <!-- TODAS LAS TARJETAS COMPLETAS ABAJO -->
   <!-- (Aquí van todas las cards que ya corregí — TODAS incluidas) -->
@@ -499,6 +501,7 @@ buttons.forEach(btn => {
 // PERSONAL menu
 document.getElementById("btnPersonal").addEventListener("click", e => {
   e.preventDefault();
+  window._personalRows = filas;
   const sub = document.getElementById("submenuPersonal");
   sub.style.display = sub.style.display === "block" ? "none" : "block";
 });
@@ -508,20 +511,78 @@ async function cargarPersonal() {
   const resp = await fetch(CSV_URL);
   const data = await resp.text();
   const filas = data.replace(/\r/g, "").split("\n").map(f => f.split(","));
+  window._personalRows = filas;
   const sub = document.getElementById("submenuPersonal");
   sub.innerHTML = "";
   for (let i = 1; i < filas.length; i++) {
     const [nombre, seccion] = filas[i];
     if (!nombre) continue;
     const li = document.createElement("li");
-    li.textContent = `${nombre} — ${seccion}`;
+    li.textContent = `${nombre} 
+// PERSONAL card display
+function mostrarCardPersonal(datos) {
+  const card = document.getElementById("personalCard");
+  card.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-main-info">
+          <div class="icon-people">👤</div>
+          <div class="card-texts">
+            <span class="card-title">${datos.nombre}</span>
+            <span class="card-subtitle">${datos.area || ""}</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-details show">
+        <p><strong>RUT:</strong> ${datos.rut}</p>
+        <p><strong>Edad:</strong> ${datos.edad}</p>
+        <p><strong>Fecha Nac.:</strong> ${datos.fnac}</p>
+        <p><strong>Mutualidad:</strong> ${datos.mutual}</p>
+        <p><strong>Teléfono:</strong> ${datos.fono}</p>
+        <p><strong>Dirección:</strong> ${datos.dir}</p>
+        <p><strong>Emergencia:</strong> ${datos.emerg}</p>
+        <p><strong>Enfermedades:</strong> ${datos.enf}</p>
+        <p><strong>Calidad Jurídica:</strong> ${datos.cj}</p>
+      </div>
+    </div>
+  `;
+}
+
+function engancharClicksPersonal(rows) {
+  const lis = document.querySelectorAll("#submenuPersonal li");
+  lis.forEach((li, idx) => {
+    li.addEventListener("click", () => {
+      const cols = rows[idx+1];
+      mostrarCardPersonal({
+        nombre: `${cols[0]} ${cols[1]} ${cols[2]}`,
+        rut: cols[3],
+        edad: cols[4],
+        fnac: cols[5],
+        mutual: cols[6],
+        fono: cols[7],
+        dir: cols[8],
+        emerg: cols[9],
+        enf: cols[10],
+        cj: cols[11],
+        area: cols[12]
+      });
+    });
+  });
+}
+
+// modify cargarPersonal to save rows and call engancharClicksPersonal
+— ${seccion}`;
     sub.appendChild(li);
   }
 }
-cargarPersonal();
+cargarPersonal().then(()=>engancharClicksPersonal(window._personalRows));
 </script>
 
 </body>
 </html>
+
+
+
+
 
 
