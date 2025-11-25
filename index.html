@@ -225,6 +225,9 @@
   <ul>
     <li><a href="#" id="btnMicro">Microbasurales</a></li>
     <li><a href="#" id="btnRsd">Frecuencia RSD</a></li>
+    <li><a href="#" id="btnPersonal">Personal ▾</a>
+      <ul id="submenuPersonal"></ul>
+    </li>
   </ul>
 </div>
 
@@ -492,6 +495,30 @@ buttons.forEach(btn => {
     btn.textContent = isOpen ? '+' : '−';
   });
 });
+
+// PERSONAL menu
+document.getElementById("btnPersonal").addEventListener("click", e => {
+  e.preventDefault();
+  const sub = document.getElementById("submenuPersonal");
+  sub.style.display = sub.style.display === "block" ? "none" : "block";
+});
+
+async function cargarPersonal() {
+  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRe9KYpZHsb2Wnc5nYXNSGgHfhdq8-iEPjh8CmlnPewhm6xdB6BQbFLsiIi2SlnnABaU8nEalZobyl1/pub?output=csv";
+  const resp = await fetch(CSV_URL);
+  const data = await resp.text();
+  const filas = data.replace(/\r/g, "").split("\n").map(f => f.split(","));
+  const sub = document.getElementById("submenuPersonal");
+  sub.innerHTML = "";
+  for (let i = 1; i < filas.length; i++) {
+    const [nombre, seccion] = filas[i];
+    if (!nombre) continue;
+    const li = document.createElement("li");
+    li.textContent = `${nombre} — ${seccion}`;
+    sub.appendChild(li);
+  }
+}
+cargarPersonal();
 </script>
 
 </body>
