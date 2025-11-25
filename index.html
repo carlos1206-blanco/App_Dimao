@@ -472,6 +472,7 @@ btnMenu.addEventListener("click", () => {
   sideMenu.classList.toggle("show");
 });
 
+// MAP BUTTONS
 document.getElementById("btnMicro").onclick = () => {
   closeMaps();
   document.getElementById("mapMicro").classList.add("show");
@@ -486,40 +487,46 @@ function closeMaps() {
   document.querySelectorAll(".map-screen").forEach(m => m.classList.remove("show"));
 }
 
-const buttons = document.querySelectorAll('.toggle-btn');
-buttons.forEach(btn => {
+// CARD COLLAPSE SYSTEM
+document.querySelectorAll('.toggle-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const targetSelector = btn.getAttribute('data-target');
     const details = document.querySelector(targetSelector);
-
     const isOpen = details.classList.contains('show');
     details.classList.toggle('show');
     btn.textContent = isOpen ? '+' : '−';
   });
 });
 
-// PERSONAL menu
+// PERSONAL MENU TOGGLE
 document.getElementById("btnPersonal").addEventListener("click", e => {
   e.preventDefault();
-  window._personalRows = filas;
   const sub = document.getElementById("submenuPersonal");
   sub.style.display = sub.style.display === "block" ? "none" : "block";
 });
 
+// LOAD PERSONAL CSV
 async function cargarPersonal() {
   const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRe9KYpZHsb2Wnc5nYXNSGgHfhdq8-iEPjh8CmlnPewhm6xdB6BQbFLsiIi2SlnnABaU8nEalZobyl1/pub?output=csv";
   const resp = await fetch(CSV_URL);
   const data = await resp.text();
   const filas = data.replace(/\r/g, "").split("\n").map(f => f.split(","));
   window._personalRows = filas;
+
   const sub = document.getElementById("submenuPersonal");
   sub.innerHTML = "";
+
   for (let i = 1; i < filas.length; i++) {
-    const [nombre, seccion] = filas[i];
-    if (!nombre) continue;
+    if (!filas[i][0]) continue;
+    const nombreCompleto = `${filas[i][0]} ${filas[i][1]} ${filas[i][2]}`;
     const li = document.createElement("li");
-    li.textContent = `${nombre} 
-// PERSONAL card display
+    li.textContent = nombreCompleto;
+    li.dataset.index = i;
+    sub.appendChild(li);
+  }
+}
+
+// SHOW PERSONAL CARD
 function mostrarCardPersonal(datos) {
   const card = document.getElementById("personalCard");
   card.innerHTML = `
@@ -548,38 +555,43 @@ function mostrarCardPersonal(datos) {
   `;
 }
 
-function engancharClicksPersonal(rows) {
-  const lis = document.querySelectorAll("#submenuPersonal li");
-  lis.forEach((li, idx) => {
+// HOOK PERSONAL CLICKS
+function engancharClicksPersonal() {
+  document.querySelectorAll("#submenuPersonal li").forEach(li => {
     li.addEventListener("click", () => {
-      const cols = rows[idx+1];
+      const idx = parseInt(li.dataset.index);
+      const row = window._personalRows[idx];
+
       mostrarCardPersonal({
-        nombre: `${cols[0]} ${cols[1]} ${cols[2]}`,
-        rut: cols[3],
-        edad: cols[4],
-        fnac: cols[5],
-        mutual: cols[6],
-        fono: cols[7],
-        dir: cols[8],
-        emerg: cols[9],
-        enf: cols[10],
-        cj: cols[11],
-        area: cols[12]
+        nombre: `${row[0]} ${row[1]} ${row[2]}`,
+        rut: row[3],
+        edad: row[4],
+        fnac: row[5],
+        mutual: row[6],
+        fono: row[7],
+        dir: row[8],
+        emerg: row[9],
+        enf: row[10],
+        cj: row[11],
+        area: row[12]
       });
     });
   });
 }
 
-// modify cargarPersonal to save rows and call engancharClicksPersonal
-— ${seccion}`;
-    sub.appendChild(li);
-  }
-}
-cargarPersonal().then(()=>engancharClicksPersonal(window._personalRows));
+// INIT
+cargarPersonal().then(engancharClicksPersonal);
 </script>
 
 </body>
 </html>
+
+
+
+
+
+
+
 
 
 
