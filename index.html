@@ -1,4 +1,5 @@
-!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -65,7 +66,7 @@
     box-shadow: -3px 0 10px rgba(0,0,0,0.15);
     padding: 20px;
     transition: right 0.3s ease;
-    z-index: 9995;
+    z-index: 9998;
   }
 
   .side-menu.show {
@@ -101,7 +102,7 @@
     width: 100%;
     height: 100%;
     background: #ffffff;
-    z-index: 9995;
+    z-index: 9997;
     display: none;
     flex-direction: column;
     padding: 10px;
@@ -112,7 +113,6 @@
   }
 
   .close-map {
-    z-index: 10001 !important;
     align-self: flex-end;
     font-size: 22px;
     border: none;
@@ -215,11 +215,10 @@
 
   /* PERSONAL SUBMENU SCROLL */
   #submenuPersonal {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
+    max-height: 280px;
+    overflow-y: auto;
     padding-left: 10px;
-}
+  }
   #submenuPersonal li {
     cursor: pointer;
     margin: 6px 0;
@@ -516,12 +515,7 @@ document.querySelectorAll('.toggle-btn').forEach(btn => {
 document.getElementById("btnPersonal").addEventListener("click", e => {
   e.preventDefault();
   const sub = document.getElementById("submenuPersonal");
-  if (sub.style.maxHeight === "0px" || sub.style.maxHeight === "") {
-    sub.style.maxHeight = sub.scrollHeight + "px";
-  } else {
-    sub.style.maxHeight = "0px";
-  }
-});
+  sub.style.display = sub.style.display === "block" ? "none" : "block";
 });
 
 // LOAD PERSONAL CSV
@@ -604,7 +598,6 @@ cargarPersonal().then(engancharClicksPersonal);
 
 </body>
 </html>
-
 
 
 
