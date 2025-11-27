@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -112,6 +112,7 @@
   }
 
   .close-map {
+    z-index: 10001 !important;
     align-self: flex-end;
     font-size: 22px;
     border: none;
@@ -214,10 +215,11 @@
 
   /* PERSONAL SUBMENU SCROLL */
   #submenuPersonal {
-    max-height: 280px;
-    overflow-y: auto;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
     padding-left: 10px;
-  }
+}
   #submenuPersonal li {
     cursor: pointer;
     margin: 6px 0;
@@ -514,7 +516,12 @@ document.querySelectorAll('.toggle-btn').forEach(btn => {
 document.getElementById("btnPersonal").addEventListener("click", e => {
   e.preventDefault();
   const sub = document.getElementById("submenuPersonal");
-  sub.style.display = sub.style.display === "block" ? "none" : "block";
+  if (sub.style.maxHeight === "0px" || sub.style.maxHeight === "") {
+    sub.style.maxHeight = sub.scrollHeight + "px";
+  } else {
+    sub.style.maxHeight = "0px";
+  }
+});
 });
 
 // LOAD PERSONAL CSV
@@ -597,6 +604,9 @@ cargarPersonal().then(engancharClicksPersonal);
 
 </body>
 </html>
+
+
+
 
 
 
