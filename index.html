@@ -6,28 +6,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aseo_Dimao PRO</title>
 <style>
-body{font-family:system-ui;background:#f5f5f7;margin:0;padding:0;}
-.menu-btn{position:fixed;top:16px;left:16px;background:#111;color:#fff;padding:12px;border-radius:10px;cursor:pointer;z-index:9999;font-size:22px;}
-.side-menu{position:fixed;top:0;left:-260px;width:260px;height:100%;background:#111;color:#fff;padding:25px;transition:left .3s;z-index:9998;overflow-y:auto;}
+body{margin:0;font-family:system-ui;background:#f5f5f7;}
+.menu-btn{position:fixed;top:16px;left:16px;background:#111;color:#fff;padding:12px;border-radius:10px;cursor:pointer;z-index:10000;}
+.side-menu{position:fixed;top:0;left:-260px;width:260px;height:100%;background:#111;color:#fff;padding:25px;transition:.3s;z-index:9999;overflow-y:auto;}
 .side-menu.show{left:0;}
-.side-menu h3{margin-bottom:20px;font-size:1.4rem;}
-.side-menu ul{list-style:none;padding:0;margin:0;}
-.side-menu ul li{padding:14px 0;border-bottom:1px solid #333;cursor:pointer;font-size:1.1rem;}
-#personalSearchContainer{display:none;padding:10px 0;}
+.side-menu ul{list-style:none;padding:0;}
+.side-menu li{padding:14px 0;border-bottom:1px solid #333;cursor:pointer;}
 #personalSearchContainer input{width:100%;padding:10px;border-radius:8px;border:none;background:#222;color:#fff;}
-#submenuPersonal{display:none;max-height:260px;overflow-y:auto;}
-.map-screen{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:9997;flex-direction:column;}
-.map-screen.show{display:flex;}
-.close-map{align-self:flex-end;font-size:26px;background:none;border:none;margin:10px;cursor:pointer;}
-.logo-container{text-align:center;margin-top:70px;}
-.logo-aseo{width:150px;}
-.app-container{max-width:460px;margin:0 auto;padding:20px;}
-.card{background:white;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
-.card-header{display:flex;justify-content:space-between;align-items:center;}
-.icon-people{background:#dceaff;width:34px;height:34px;border-radius:50%;display:flex;justify-content:center;align-items:center;}
-.toggle-btn{background:#eee;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;}
+#panelUnidades{position:fixed;top:0;right:-100%;width:100%;max-width:480px;height:100%;background:#111;color:#fff;z-index:9998;overflow-y:auto;padding:20px;transition:right .3s;}
+#panelUnidades.show{right:0;}
+.close-panel{font-size:28px;margin-bottom:20px;cursor:pointer;}
+.card{background:#fff;color:#000;border-radius:16px;padding:12px;margin-bottom:12px;}
 .card-details{display:none;background:#f3f3f8;padding:10px;border-radius:10px;margin-top:10px;}
 .card-details.show{display:block;}
+.icon-people{width:32px;height:32px;border-radius:50%;background:#dceaff;display:flex;justify-content:center;align-items:center;}
 </style>
 </head>
 <body>
@@ -37,142 +29,282 @@ body{font-family:system-ui;background:#f5f5f7;margin:0;padding:0;}
 <div class="side-menu" id="sideMenu">
   <h3>Menú</h3>
   <ul>
-    <li id="btnMapaGeneral">🗺️ Mapa General</li>
+    <li id="btnMapa">🗺️ Mapa General</li>
     <li id="btnPersonal">👥 Personal ▾</li>
   </ul>
-
-  <div id="personalSearchContainer">
-    <input type="text" id="searchPersonal" placeholder="Buscar funcionario...">
+  <div id="personalSearchContainer" style="display:none;">
+    <input id="searchPersonal" placeholder="Buscar funcionario...">
   </div>
-  <ul id="submenuPersonal"></ul>
-
+  <ul id="submenuPersonal" style="display:none;"></ul>
   <ul>
-    <li>📋 Funciones</li>
+    <li id="btnUnidades">🗂️ Unidades Operativas</li>
     <li>📊 Estadísticas</li>
   </ul>
 </div>
 
-<div id="mapGeneral" class="map-screen">
-  <button class="close-map" onclick="closeMaps()">✖</button>
-  <iframe src="https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F" width="100%" height="100%" style="border:0;"></iframe>
+<div style="margin-top:60px;">
+<iframe src="https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F" 
+style="border:0;width:100%;height:calc(100vh - 60px);"></iframe>
 </div>
 
-<div class="logo-container">
-  <img src="img/logo_aseo.png" class="logo-aseo">
-</div>
-
-<div class="app-container">
-<h1 style="text-align:center;">Aseo_Dimao</h1>
-<div id="personalCard"></div>
-
+<div id="panelUnidades">
+  <div class="close-panel" id="closeUnidades">✖</div>
+  
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info">
+        <div class="icon-people">👥</div>
+        <div class="card-texts">
+          <span class="card-title">Equipo Administrativo</span>
+          <span class="card-subtitle">10 personas</span>
+        </div>
+      </div>
+      <button class="toggle-btn" data-target="#unidad-0">+</button>
+    </div>
+    <div class="card-details" id="unidad-0">
+      <p><strong>Departamento:</strong> Aseo</p>
+      <p><strong>Encargado:</strong> Sebastián Carrillo</p>
+      <p><strong>Personas:</strong> 10</p>
+      <p><strong>Funciones:</strong> Atención telefónica, público, tickets, solicitudes, licitaciones, logística, compras, análisis de datos, remuneraciones, sobreproducción, terreno y secretaría.</p>
+      <p><strong>Días:</strong> Lunes a Viernes</p>
+      <p><strong>Horarios:</strong> 08:30 a 17:20</p>
+    </div>
+  </div>
+<!-- 🔥 Aseo Comunal y Cuneteo -->
 <div class="card">
   <div class="card-header">
-    <div style="display:flex;align-items:center;gap:10px;">
+    <div class="card-main-info">
       <div class="icon-people">👥</div>
-      <div><strong>Equipo Administrativo</strong><br><small>10 personas</small></div>
+      <div class="card-texts">
+        <span class="card-title">Aseo Comunal y Cuneteo</span>
+        <span class="card-subtitle">68 personas</span>
+      </div>
     </div>
-    <button class="toggle-btn" data-target="#u0">+</button>
+    <button class="toggle-btn" data-target="#unidad-1">+</button>
   </div>
-  <div class="card-details" id="u0"><p>Departamento Aseo</p></div>
+  <div class="card-details" id="unidad-1">
+    <p><strong>Departamento:</strong> Aseo</p>
+    <p><strong>Encargado:</strong> Sebastián Carrillo</p>
+    <p><strong>Personas:</strong> 68</p>
+    <p><strong>Funciones:</strong> Barrido, limpieza y cuneteo en avenidas principales.</p>
+    <p><strong>Días:</strong> Lunes a Viernes, Sábado</p>
+    <p><strong>Horarios:</strong> 08:00 a 17:20, sábado 08:30 a 12:30</p>
+    <p><strong>Derivadas:</strong><br>
+      • Apoyo a Acción Social (casos Diógenes)<br>
+      • Retiro de cachureos por solicitud
+    </p>
+    <p><strong>Observación:</strong> Sábado solo 8 personas. Horario verano: 07:00 a 15:00</p>
+  </div>
 </div>
 
-<!-- Cards continue... (Full content omitted for space) -->
+<!-- 🔥 Barrido Mecanizado -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-main-info">
+      <div class="icon-people">👥</div>
+      <div class="card-texts">
+        <span class="card-title">Barrido Mecanizado</span>
+        <span class="card-subtitle">4 personas</span>
+      </div>
+    </div>
+    <button class="toggle-btn" data-target="#unidad-2">+</button>
+  </div>
+  <div class="card-details" id="unidad-2">
+    <p><strong>Departamento:</strong> Aseo</p>
+    <p><strong>Encargado:</strong> Sebastián Carrillo</p>
+    <p><strong>Personas:</strong> 4</p>
+    <p><strong>Funciones:</strong> Operación de camión barredor (lavado, barrido, absorción).</p>
+    <p><strong>Días:</strong> Lunes a Viernes</p>
+    <p><strong>Horarios:</strong> 07:00 a 23:00</p>
+  </div>
+</div>
+
+<!-- 🔥 RSD Ferias -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-main-info">
+      <div class="icon-people">👥</div>
+      <div class="card-texts">
+        <span class="card-title">RSD Ferias</span>
+        <span class="card-subtitle">2 personas</span>
+      </div>
+    </div>
+    <button class="toggle-btn" data-target="#unidad-3">+</button>
+  </div>
+  <div class="card-details" id="unidad-3">
+    <p><strong>Departamento:</strong> Aseo</p>
+    <p><strong>Personas:</strong> 2</p>
+    <p><strong>Funciones:</strong> Limpieza posterior a ferias libres.</p>
+    <p><strong>Días:</strong> Martes a Domingo</p>
+    <p><strong>Horarios:</strong> 15:00 a 20:00 / 15:00 a 22:00</p>
+  </div>
+</div>
+
+<!-- 🔥 RSD Normal -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-main-info">
+      <div class="icon-people">👥</div>
+      <div class="card-texts">
+        <span class="card-title">RSD</span>
+        <span class="card-subtitle">5 personas</span>
+      </div>
+    </div>
+    <button class="toggle-btn" data-target="#unidad-4">+</button>
+  </div>
+  <div class="card-details" id="unidad-4">
+    <p><strong>Funciones:</strong> Supervisión de recolección de basura domiciliaria.</p>
+    <p><strong>Días:</strong> Lunes a Sábado</p>
+    <p><strong>Horarios:</strong> 08:30 a 17:20 / Sábado 08:30 a 13:00</p>
+  </div>
+</div>
+
+<!-- 🔥 Aseo Centro -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-main-info">
+      <div class="icon-people">👥</div>
+      <div class="card-texts">
+        <span class="card-title">Aseo Centro</span>
+        <span class="card-subtitle">31 personas</span>
+      </div>
+    </div>
+    <button class="toggle-btn" data-target="#unidad-5">+</button>
+  </div>
+  <div class="card-details" id="unidad-5">
+    <p><strong>Funciones:</strong> Barrido y limpieza del centro y plaza.</p>
+    <p><strong>Días:</strong> Lunes a Domingo</p>
+    <p><strong>Horarios:</strong> 07:00-15:00 / 15:00-22:00 / 09:00-15:00 / 16:00-21:00</p>
+  </div>
+</div>
+
+<!-- 🔥 Aseo Nocturno -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-main-info">
+      <div class="icon-people">👥</div>
+      <div class="card-texts">
+        <span class="card-title">Aseo Nocturno</span>
+        <span class="card-subtitle">9 personas</span>
+      </div>
+    </div>
+    <button class="toggle-btn" data-target="#unidad-6">+</button>
+  </div>
+  <div class="card-details" id="unidad-6">
+    <p><strong>Días:</strong> Lunes a Domingo</p>
+    <p><strong>Horario:</strong> 21:00 a 04:00</p>
+  </div>
+</div>
+
+<!-- 🔥 Lavado de Aceras -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-main-info">
+      <div class="icon-people">👥</div>
+      <div class="card-texts">
+        <span class="card-title">Lavado de Aceras</span>
+        <span class="card-subtitle">5 personas</span>
+      </div>
+    </div>
+    <button class="toggle-btn" data-target="#unidad-7">+</button>
+  </div>
+  <div class="card-details" id="unidad-7">
+    <p><strong>Días:</strong> Domingo a Jueves</p>
+    <p><strong>Horario:</strong> 21:00 a 04:00</p>
+  </div>
+</div>
+
+<!-- 🔥 Sobreproducción -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-main-info">
+      <div class="icon-people">👥</div>
+      <div class="card-texts">
+        <span class="card-title">Sobreproducción</span>
+        <span class="card-subtitle">5 personas</span>
+      </div>
+    </div>
+    <button class="toggle-btn" data-target="#unidad-8">+</button>
+  </div>
+  <div class="card-details" id="unidad-8">
+    <p><strong>Funciones:</strong> Gestión de locales que superan 1800 L/mes.</p>
+    <p><strong>Días:</strong> Lunes a Viernes</p>
+    <p><strong>Horario:</strong> 08:15 a 17:20</p>
+  </div>
+</div>
+
+<!-- 🔥 RSD Nocturno -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-main-info">
+      <div class="icon-people">👥</div>
+      <div class="card-texts">
+        <span class="card-title">RSD Nocturno</span>
+        <span class="card-subtitle">1 persona</span>
+      </div>
+    </div>
+    <button class="toggle-btn" data-target="#unidad-9">+</button>
+  </div>
+  <div class="card-details" id="unidad-9">
+    <p><strong>Días:</strong> Lunes a Domingo</p>
+    <p><strong>Horario:</strong> 18:00 a 02:00</p>
+  </div>
 
 </div>
 
 <script>
-const btnMenu=document.getElementById("btnMenu");
-const sideMenu=document.getElementById("sideMenu");
-btnMenu.onclick=()=>sideMenu.classList.toggle("show");
+btnMenu.onclick=()=>sideMenu.classList.toggle('show');
+btnUnidades.onclick=()=>{panelUnidades.classList.add('show');};
+closeUnidades.onclick=()=>panelUnidades.classList.remove('show');
 
-// mapa
-document.getElementById("btnMapaGeneral").onclick=()=>{
-  closeMaps();
-  document.getElementById("mapGeneral").classList.add("show");
+document.getElementById("btnPersonal").onclick=function(){
+  let sub=document.getElementById("submenuPersonal");
+  let box=document.getElementById("personalSearchContainer");
+  let show=sub.style.display!=="block";
+  sub.style.display=show?"block":"none";
+  box.style.display=show?"block":"none";
 };
 
-function closeMaps(){
-  document.querySelectorAll(".map-screen").forEach(m=>m.classList.remove("show"));
-}
-
-// toggle tarjetas
-document.querySelectorAll(".toggle-btn").forEach(b=>{
-  b.onclick=()=>{
-    const t=document.querySelector(b.dataset.target);
-    const o=t.classList.contains("show");
-    t.classList.toggle("show");
-    b.textContent=o?"+":"−";
-  };
-});
-
-// personal menu
-document.getElementById("btnPersonal").onclick=(e)=>{
-  e.preventDefault();
-  const s=document.getElementById("submenuPersonal");
-  const sc=document.getElementById("personalSearchContainer");
-  const st=s.style.display==="block";
-  s.style.display=st?"none":"block";
-  sc.style.display=st?"none":"block";
-};
-
-// load CSV
 async function cargarPersonal(){
   const url="https://docs.google.com/spreadsheets/d/e/2PACX-1vRe9KYpZHsb2Wnc5nYXNSGgHfhdq8-iEPjh8CmlnPewhm6xdB6BQbFLsiIi2SlnnABaU8nEalZobyl1/pub?output=csv";
-  const resp=await fetch(url);const txt=await resp.text();
-  const rows=txt.trim().split("\n").map(x=>x.split(","));
-  window._personalRows=rows;
+  const resp=await fetch(url); const txt=await resp.text();
+  const rows=txt.trim().split("\n").map(r=>r.split(","));
+  window._rows=rows;
   const sub=document.getElementById("submenuPersonal");
   sub.innerHTML="";
-  for(let i=1;i<rows.length;i++){
-    if(!rows[i][0])continue;
+  for(let i=1;i<rows.length;i++) if(rows[i][0]) {
     let li=document.createElement("li");
     li.textContent=rows[i][0]+" "+rows[i][1]+" "+rows[i][2];
-    li.dataset.index=i;
+    li.dataset.i=i;
+    li.onclick=()=>mostrarCard(rows[i]);
     sub.appendChild(li);
   }
-  enganchar();
 }
 
-// buscar
-document.getElementById("searchPersonal").addEventListener("input",function(){
-  const f=this.value.toLowerCase();
+function mostrarCard(r){
+  alert("Info de: "+r[0]+" "+r[1]);
+}
+
+document.getElementById("searchPersonal").oninput=function(){
+  let f=this.value.toLowerCase();
   document.querySelectorAll("#submenuPersonal li").forEach(li=>{
     li.style.display=li.textContent.toLowerCase().includes(f)?"block":"none";
   });
+};
+
+document.querySelectorAll('.toggle-btn').forEach(b=>{
+  b.onclick=()=>{
+    let t=document.querySelector(b.dataset.target);
+    let o=t.classList.contains('show');
+    t.classList.toggle('show'); b.textContent=o?"+":"−";
+  };
 });
-
-// mostrar card
-function mostrarCard(row){
-  const c=document.getElementById("personalCard");
-  c.innerHTML=`<div class='card'><div class='card-header'>
-  <div style="display:flex;gap:10px;align-items:center;">
-  <div class='icon-people'>👤</div><div><strong>${row[0]} ${row[1]} ${row[2]}</strong></div>
-  </div></div>
-  <div class='card-details show'>
-  <p><strong>RUT:</strong> ${row[3]}</p>
-  <p><strong>Edad:</strong> ${row[4]}</p>
-  <p><strong>F. Nac:</strong> ${row[5]}</p>
-  <p><strong>Mutual:</strong> ${row[6]}</p>
-  <p><strong>Fono:</strong> ${row[7]}</p>
-  <p><strong>Dirección:</strong> ${row[8]}</p>
-  </div></div>`;
-}
-
-function enganchar(){
-  document.querySelectorAll("#submenuPersonal li").forEach(li=>{
-    li.onclick=()=>{
-      const row=window._personalRows[li.dataset.index];
-      mostrarCard(row);
-    };
-  });
-}
 
 cargarPersonal();
 </script>
 
 </body>
 </html>
-
 
 
 
