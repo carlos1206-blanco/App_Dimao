@@ -6,16 +6,16 @@
 <meta name="theme-color" content="#111111">
 <title>Aseo_Dimao PRO</title>
 <style>
-  /* --- Estilos Generales App Móvil --- */
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #eee; overflow: hidden; height: 100vh; width: 100vw; }
+  /* --- Estilos de App Móvil --- */
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #eee; overflow: hidden; height: 100vh; width: 100vw; }
 
-  /* --- Mapa a pantalla completa --- */
+  /* Contenedor principal del mapa a pantalla completa */
   .map-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-  /* Asegúrate de que el iframe ocupe todo el contenedor */
+  /* URL insertada: https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F */
   iframe { border: 0; width: 100%; height: 100%; display: block; }
 
-  /* --- Botón Menú Flotante --- */
+  /* Botón Menú */
   .menu-btn {
     position: fixed; top: 15px; left: 15px;
     background: #111; color: #fff;
@@ -25,9 +25,8 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     z-index: 1000; cursor: pointer; transition: transform 0.2s;
   }
-  .menu-btn:active { transform: scale(0.9); }
 
-  /* --- Menú Lateral (Drawer) --- */
+  /* Menú Lateral */
   .side-menu {
     position: fixed; top: 0; left: -280px;
     width: 280px; height: 100%;
@@ -46,8 +45,7 @@
     padding: 12px 0; border-bottom: 1px solid #333;
     font-size: 15px; cursor: pointer; display: flex; align-items: center;
   }
-  .side-menu li:active { background: #333; }
-
+  
   /* Input búsqueda */
   #personalSearchContainer { padding: 10px 0; border-bottom: 1px solid #333; }
   #searchPersonal {
@@ -56,100 +54,51 @@
     outline: none;
   }
 
-  /* Overlay para cerrar menú al tocar afuera */
-  .overlay-bg {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5); z-index: 1500;
-    display: none; opacity: 0; transition: opacity 0.3s;
-  }
+  /* Overlay y Panel de Unidades (Derecha) */
+  .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s; }
   .overlay-bg.show { display: block; opacity: 1; }
-
-  /* --- Panel Unidades (Derecha) --- */
   #panelUnidades {
-    position: fixed; top: 0; right: -100%;
-    width: 100%; max-width: 400px; height: 100%;
-    background: #f5f5f7; color: #000;
-    z-index: 2000; overflow-y: auto; padding: 15px 15px 80px 15px;
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%;
+    background: #f5f5f7; color: #000; z-index: 2000; overflow-y: auto;
+    padding: 15px 15px 80px 15px; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: -2px 0 10px rgba(0,0,0,0.2);
   }
   #panelUnidades.show { right: 0; }
-  
-  .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
   .close-panel { font-size: 24px; padding: 5px; cursor: pointer; background: #e1e1e1; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;}
 
-  /* --- Tarjetas (Cards) Compactas --- */
-  .card {
-    background: #fff; border-radius: 12px;
-    padding: 10px; margin-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
+  /* Tarjetas (Compactas) */
+  .card { background: #fff; border-radius: 12px; padding: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
   .card-header { display: flex; justify-content: space-between; align-items: center; }
   .card-main-info { display: flex; align-items: center; gap: 10px; }
-  .icon-people {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: #e3f2fd; color: #007aff;
-    display: flex; justify-content: center; align-items: center;
-    font-size: 18px; flex-shrink: 0;
-  }
+  .icon-people { width: 36px; height: 36px; border-radius: 50%; background: #e3f2fd; color: #007aff; display: flex; justify-content: center; align-items: center; font-size: 18px; flex-shrink: 0; }
   .card-texts { display: flex; flex-direction: column; }
   .card-title { font-weight: 600; font-size: 14px; color: #000; }
   .card-subtitle { font-size: 12px; color: #666; }
-  
-  .toggle-btn {
-    background: #f0f0f3; border: none; width: 30px; height: 30px;
-    border-radius: 8px; font-weight: bold; color: #007aff;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-  }
-
-  .card-details {
-    display: none; background: #f9f9fc;
-    padding: 10px; border-radius: 8px; margin-top: 8px;
-    font-size: 13px; line-height: 1.4; color: #444;
-  }
-  .card-details.show { display: block; animation: slideDown 0.2s ease-out; }
+  .toggle-btn { background: #f0f0f3; border: none; width: 30px; height: 30px; border-radius: 8px; font-weight: bold; color: #007aff; cursor: pointer; display: flex; align-items: center; justify-content: center;}
+  .card-details { display: none; background: #f9f9fc; padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 13px; line-height: 1.4; color: #444; }
+  .card-details.show { display: block; }
   .card-details p { margin: 4px 0; }
-  @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* --- Modal Funcionario --- */
-  #modalBg {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-    display: none; align-items: center; justify-content: center;
-    z-index: 99999; opacity: 0; transition: opacity 0.2s;
-  }
+  /* Modal Funcionario */
+  #modalBg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 99999; opacity: 0; transition: opacity 0.2s; }
   #modalBg.show { opacity: 1; }
-  
-  #modalCard {
-    background: #fff; width: 85%; max-width: 340px;
-    border-radius: 16px; padding: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    position: relative; transform: scale(0.9); transition: transform 0.2s;
-  }
+  #modalCard { background: #fff; width: 85%; max-width: 340px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; transform: scale(0.9); transition: transform 0.2s; }
   #modalBg.show #modalCard { transform: scale(1); }
-
-  #closeModal {
-    position: absolute; top: 10px; right: 10px;
-    width: 30px; height: 30px; background: #f0f0f3;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 14px; color: #555;
-  }
+  #closeModal { position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: #f0f0f3; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; color: #555; }
   .modal-content h2 { margin: 0 0 5px 0; font-size: 18px; color: #111; }
   .modal-content h4 { margin: 0 0 15px 0; font-size: 14px; color: #666; font-weight: normal; }
   .modal-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 8px 0; font-size: 13px; }
   .modal-row strong { color: #333; }
   .modal-row span { color: #555; text-align: right; max-width: 60%; }
-
 </style>
 </head>
 <body>
 
 <div class="map-container">
-  <iframe src=<iframe src="https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F" width="640" height="480"> allowfullscreen></iframe>
+  <iframe src="https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F" allowfullscreen></iframe>
 </div>
 
 <div class="overlay-bg" id="overlayBg"></div>
-
 <div class="menu-btn" id="btnMenu">☰</div>
 
 <div class="side-menu" id="sideMenu">
@@ -171,7 +120,7 @@
     <li id="btnUnidades">🗂️ Unidades Operativas</li>
     <li onclick="alert('Sección en desarrollo')">📊 Estadísticas</li>
   </ul>
-  <div style="margin-top:auto; font-size:11px; color:#555; text-align:center;">Versión 2.1</div>
+  <div style="margin-top:auto; font-size:11px; color:#555; text-align:center;">Versión 2.2 Final</div>
 </div>
 
 <div id="panelUnidades">
@@ -182,175 +131,82 @@
 
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">📁</div>
-        <div class="card-texts">
-          <span class="card-title">Administrativo</span>
-          <span class="card-subtitle">10 personas</span>
-        </div>
-      </div>
+      <div class="card-main-info"><div class="icon-people">📁</div><div class="card-texts"><span class="card-title">Administrativo</span><span class="card-subtitle">10 personas</span></div></div>
       <button class="toggle-btn" data-target="#unidad-0">+</button>
     </div>
-    <div class="card-details" id="unidad-0">
-      <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-      <p><strong>Funciones:</strong> Atención, tickets, logística, compras, remuneraciones.</p>
-      <p><strong>Horario:</strong> Lu-Vi 08:30 - 17:20</p>
-    </div>
+    <div class="card-details" id="unidad-0"><p><strong>Encargado:</strong> Sebastián Carrillo</p><p><strong>Funciones:</strong> Atención, tickets, licitaciones, logística, compras, remuneraciones.</p><p><strong>Horario:</strong> Lu-Vi 08:30 - 17:20</p></div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">🧹</div>
-        <div class="card-texts">
-          <span class="card-title">Aseo Comunal y Cuneteo</span>
-          <span class="card-subtitle">68 personas</span>
-        </div>
-      </div>
+      <div class="card-main-info"><div class="icon-people">🧹</div><div class="card-texts"><span class="card-title">Aseo Comunal y Cuneteo</span><span class="card-subtitle">68 personas</span></div></div>
       <button class="toggle-btn" data-target="#unidad-1">+</button>
     </div>
-    <div class="card-details" id="unidad-1">
-      <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-      <p><strong>Funciones:</strong> Barrido y cuneteo avenidas principales.</p>
-      <p><strong>Horario:</strong> Lu-Vi 08:00-17:20 | Sab 08:30-12:30</p>
-      <p><strong>Observación:</strong> Sábado solo 8 personas. Verano 07:00-15:00.</p>
-    </div>
+    <div class="card-details" id="unidad-1"><p><strong>Encargado:</strong> Sebastián Carrillo</p><p><strong>Funciones:</strong> Barrido y cuneteo avenidas principales.</p><p><strong>Horario:</strong> Lu-Vi 08:00-17:20 | Sab 08:30-12:30</p><p><strong>Observación:</strong> Sábado solo 8 personas. Verano 07:00-15:00.</p></div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">🚛</div>
-        <div class="card-texts">
-          <span class="card-title">Barrido Mecanizado</span>
-          <span class="card-subtitle">4 personas</span>
-        </div>
-      </div>
+      <div class="card-main-info"><div class="icon-people">🚛</div><div class="card-texts"><span class="card-title">Barrido Mecanizado</span><span class="card-subtitle">4 personas</span></div></div>
       <button class="toggle-btn" data-target="#unidad-2">+</button>
     </div>
-    <div class="card-details" id="unidad-2">
-      <p><strong>Funciones:</strong> Operación camión barredor.</p>
-      <p><strong>Horario:</strong> Lu-Vi 07:00 - 23:00</p>
-    </div>
+    <div class="card-details" id="unidad-2"><p><strong>Funciones:</strong> Operación camión barredor.</p><p><strong>Horario:</strong> Lu-Vi 07:00 - 23:00</p></div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">🍎</div>
-        <div class="card-texts">
-          <span class="card-title">RSD Ferias</span>
-          <span class="card-subtitle">2 personas</span>
-        </div>
-      </div>
+      <div class="card-main-info"><div class="icon-people">🍎</div><div class="card-texts"><span class="card-title">RSD Ferias</span><span class="card-subtitle">2 personas</span></div></div>
       <button class="toggle-btn" data-target="#unidad-3">+</button>
     </div>
-    <div class="card-details" id="unidad-3">
-      <p><strong>Funciones:</strong> Limpieza post ferias libres.</p>
-      <p><strong>Horario:</strong> Ma-Do 15:00 - 20:00 / 22:00</p>
-    </div>
+    <div class="card-details" id="unidad-3"><p><strong>Funciones:</strong> Limpieza post ferias libres.</p><p><strong>Horario:</strong> Ma-Do 15:00 - 20:00 / 22:00</p></div>
   </div>
   
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">🗑️</div>
-        <div class="card-texts">
-          <span class="card-title">RSD Domiciliario</span>
-          <span class="card-subtitle">5 personas</span>
-        </div>
-      </div>
+      <div class="card-main-info"><div class="icon-people">🗑️</div><div class="card-texts"><span class="card-title">RSD Domiciliario</span><span class="card-subtitle">5 personas</span></div></div>
       <button class="toggle-btn" data-target="#unidad-4">+</button>
     </div>
-    <div class="card-details" id="unidad-4">
-      <p><strong>Funciones:</strong> Supervisión recolección basura.</p>
-      <p><strong>Horario:</strong> Lu-Sa 08:30 - 17:20 (Sab hasta 13:00)</p>
-    </div>
+    <div class="card-details" id="unidad-4"><p><strong>Funciones:</strong> Supervisión recolección basura.</p><p><strong>Horario:</strong> Lu-Sa 08:30 - 17:20 (Sab hasta 13:00)</p></div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">🏙️</div>
-        <div class="card-texts">
-          <span class="card-title">Aseo Centro</span>
-          <span class="card-subtitle">31 personas</span>
-        </div>
-      </div>
+      <div class="card-main-info"><div class="icon-people">🏙️</div><div class="card-texts"><span class="card-title">Aseo Centro</span><span class="card-subtitle">31 personas</span></div></div>
       <button class="toggle-btn" data-target="#unidad-5">+</button>
     </div>
-    <div class="card-details" id="unidad-5">
-      <p><strong>Funciones:</strong> Barrido centro y plazas.</p>
-      <p><strong>Horario:</strong> Turnos rotativos 07:00 - 22:00</p>
-    </div>
+    <div class="card-details" id="unidad-5"><p><strong>Funciones:</strong> Barrido centro y plazas.</p><p><strong>Horario:</strong> Turnos rotativos 07:00 - 22:00</p></div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">🌙</div>
-        <div class="card-texts">
-          <span class="card-title">Aseo Nocturno</span>
-          <span class="card-subtitle">9 personas</span>
-        </div>
-      </div>
+      <div class="card-main-info"><div class="icon-people">🌙</div><div class="card-texts"><span class="card-title">Aseo Nocturno</span><span class="card-subtitle">9 personas</span></div></div>
       <button class="toggle-btn" data-target="#unidad-6">+</button>
     </div>
-    <div class="card-details" id="unidad-6">
-      <p><strong>Días:</strong> Lunes a Domingo</p>
-      <p><strong>Horario:</strong> 21:00 a 04:00</p>
-    </div>
+    <div class="card-details" id="unidad-6"><p><strong>Días:</strong> Lunes a Domingo</p><p><strong>Horario:</strong> 21:00 a 04:00</p></div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">🚿</div>
-        <div class="card-texts">
-          <span class="card-title">Lavado de Aceras</span>
-          <span class="card-subtitle">5 personas</span>
-        </div>
-      </div>
+      <div class="card-main-info"><div class="icon-people">🚿</div><div class="card-texts"><span class="card-title">Lavado de Aceras</span><span class="card-subtitle">5 personas</span></div></div>
       <button class="toggle-btn" data-target="#unidad-7">+</button>
     </div>
-    <div class="card-details" id="unidad-7">
-      <p><strong>Días:</strong> Domingo a Jueves</p>
-      <p><strong>Horario:</strong> 21:00 a 04:00</p>
-    </div>
+    <div class="card-details" id="unidad-7"><p><strong>Días:</strong> Domingo a Jueves</p><p><strong>Horario:</strong> 21:00 a 04:00</p></div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">🏭</div>
-        <div class="card-texts">
-          <span class="card-title">Sobreproducción</span>
-          <span class="card-subtitle">5 personas</span>
-        </div>
-      </div>
+      <div class="card-main-info"><div class="icon-people">🏭</div><div class="card-texts"><span class="card-title">Sobreproducción</span><span class="card-subtitle">5 personas</span></div></div>
       <button class="toggle-btn" data-target="#unidad-8">+</button>
     </div>
-    <div class="card-details" id="unidad-8">
-      <p><strong>Funciones:</strong> Gestión locales > 1800 L/mes.</p>
-      <p><strong>Horario:</strong> Lu-Vi 08:15 a 17:20</p>
-    </div>
+    <div class="card-details" id="unidad-8"><p><strong>Funciones:</strong> Gestión locales > 1800 L/mes.</p><p><strong>Horario:</strong> Lu-Vi 08:15 a 17:20</p></div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">🌜</div>
-        <div class="card-texts">
-          <span class="card-title">RSD Nocturno</span>
-          <span class="card-subtitle">1 persona</span>
-        </div>
-      </div>
+      <div class="card-main-info"><div class="icon-people">🌜</div><div class="card-texts"><span class="card-title">RSD Nocturno</span><span class="card-subtitle">1 persona</span></div></div>
       <button class="toggle-btn" data-target="#unidad-9">+</button>
     </div>
-    <div class="card-details" id="unidad-9">
-      <p><strong>Días:</strong> Lunes a Domingo</p>
-      <p><strong>Horario:</strong> 18:00 a 02:00</p>
-    </div>
+    <div class="card-details" id="unidad-9"><p><strong>Días:</strong> Lunes a Domingo</p><p><strong>Horario:</strong> 18:00 a 02:00</p></div>
   </div>
 
 </div>
@@ -362,14 +218,18 @@
   </div>
 </div>
 
+
 <script>
-/* --- Lógica Menús --- */
+/* --- 6. Lógica de Menús y Acordeón --- */
 const btnMenu = document.getElementById("btnMenu");
 const sideMenu = document.getElementById("sideMenu");
 const overlayBg = document.getElementById("overlayBg");
 const panelUnidades = document.getElementById("panelUnidades");
 const btnUnidades = document.getElementById("btnUnidades");
 const closeUnidades = document.getElementById("closeUnidades");
+const modalBg = document.getElementById("modalBg");
+const modalContent = document.getElementById("modalContent");
+const closeModal = document.getElementById("closeModal");
 
 function toggleMenu(show) {
   if(show) {
@@ -381,6 +241,7 @@ function toggleMenu(show) {
     overlayBg.classList.remove('show');
   }
 }
+
 btnMenu.onclick = () => toggleMenu(true);
 overlayBg.onclick = () => toggleMenu(false);
 
@@ -394,22 +255,18 @@ closeUnidades.onclick = () => {
   overlayBg.classList.remove('show');
 };
 
-/* --- Lógica Acordeón --- */
 document.querySelectorAll('.toggle-btn').forEach(b => {
   b.onclick = () => {
     let t = document.querySelector(b.dataset.target);
     let isOpen = t.classList.contains('show');
-    if(!isOpen) {
-      t.classList.add('show');
-      b.textContent = "−"; b.style.color = "red";
-    } else {
-      t.classList.remove('show');
-      b.textContent = "+"; b.style.color = "#007aff";
-    }
+    t.classList.toggle('show');
+    b.textContent = isOpen ? "+" : "−"; 
+    b.style.color = isOpen ? "#007aff" : "red";
   };
 });
 
-/* --- Lógica Personal (Mantiene tu enlace a Google Sheets) --- */
+
+/* --- 7. Lógica Personal (Funcionario) --- */
 const btnPersonal = document.getElementById("btnPersonal");
 const submenuPersonal = document.getElementById("submenuPersonal");
 const searchBox = document.getElementById("personalSearchContainer");
@@ -423,7 +280,7 @@ btnPersonal.onclick = () => {
 
 async function cargarPersonal() {
   try {
-    // Este enlace apunta a tu CSV publicado de Google Sheets
+    // URL de tu Google Sheet publicada en formato CSV (sin cambios aquí)
     const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRe9KYpZHsb2Wnc5nYXNSGgHfhdq8-iEPjh8CmlnPewhm6xdB6BQbFLsiIi2SlnnABaU8nEalZobyl1/pub?output=csv";
     const resp = await fetch(url);
     const txt = await resp.text();
@@ -456,14 +313,8 @@ document.getElementById("searchPersonal").oninput = function() {
   }
 };
 
-/* --- Modal Funcionario --- */
-const modalBg = document.getElementById("modalBg");
-const modalContent = document.getElementById("modalContent");
-const closeModal = document.getElementById("closeModal");
-
 function abrirModalFuncionario(data) {
-  // Se asume el mismo orden de columnas que tenías:
-  // [0] Nombre1, [1] Nombre2, [2] Apellido, [3] RUT, [4] Edad, [5] F.Nac, [6] Mutual, [7] Tel, [8] Dir, [9] Emergencia, [10] Salud, [11] Contrato
+  // Las columnas están mapeadas al mismo orden de tu hoja de cálculo
   let html = `
     <h2>${data[0]} ${data[1]}</h2>
     <h4>${data[2] || ''}</h4>
@@ -490,6 +341,9 @@ closeModal.onclick = () => {
 modalBg.onclick = (e) => {
   if(e.target === modalBg) closeModal.click();
 }
+
+cargarPersonal();
+
 </script>
 
 </body>
