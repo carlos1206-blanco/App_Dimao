@@ -16,7 +16,7 @@
 
   /* --- Botón Menú Flotante --- */
   .menu-btn {
-    position: fixed; top: 15px; left: 15px; /* Movido a la izquierda para estándar móvil */
+    position: fixed; top: 15px; left: 15px;
     background: #111; color: #fff;
     width: 45px; height: 45px;
     display: flex; justify-content: center; align-items: center;
@@ -30,7 +30,7 @@
   .side-menu {
     position: fixed; top: 0; left: -280px;
     width: 280px; height: 100%;
-    background: rgba(17, 17, 17, 0.95); /* Fondo oscuro semitransparente */
+    background: rgba(17, 17, 17, 0.95);
     backdrop-filter: blur(10px);
     color: #fff; padding: 20px;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -68,7 +68,7 @@
     position: fixed; top: 0; right: -100%;
     width: 100%; max-width: 400px; height: 100%;
     background: #f5f5f7; color: #000;
-    z-index: 2000; overflow-y: auto; padding: 15px;
+    z-index: 2000; overflow-y: auto; padding: 15px 15px 80px 15px; /* Padding extra abajo para scroll */
     transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: -2px 0 10px rgba(0,0,0,0.2);
   }
@@ -144,7 +144,7 @@
 <body>
 
 <div class="map-container">
-  <iframe src="https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F" allowfullscreen></iframe>
+  <iframe src="https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F" width="640" height="480"></iframe>TU_CODIGO_AQUI" allowfullscreen></iframe>
 </div>
 
 <div class="overlay-bg" id="overlayBg"></div>
@@ -154,7 +154,7 @@
 <div class="side-menu" id="sideMenu">
   <h3>DIMAO PRO</h3>
   <ul>
-    <li onclick="alert('Usa los controles dentro del mapa para ver las capas.')">🗺️ Capas del Mapa (Info)</li>
+    <li onclick="alert('Usa el botón [ ] del mapa para ver las capas.')">🗺️ Capas (Ver en Mapa)</li>
     <li id="btnPersonal">👥 Personal (Buscar) ▾</li>
   </ul>
   
@@ -163,14 +163,14 @@
   </div>
   
   <ul id="submenuPersonal" style="display:none; flex:1; overflow-y:auto;">
-    <li style="color:#777; font-size:12px;">Cargando lista...</li>
+    <li style="color:#777; font-size:12px; padding:10px;">Cargando lista...</li>
   </ul>
 
   <ul>
     <li id="btnUnidades">🗂️ Unidades Operativas</li>
     <li onclick="alert('Sección en desarrollo')">📊 Estadísticas</li>
   </ul>
-  <div style="margin-top:auto; font-size:11px; color:#555; text-align:center;">Versión 2.0 Móvil</div>
+  <div style="margin-top:auto; font-size:11px; color:#555; text-align:center;">Versión 2.1 Final</div>
 </div>
 
 <div id="panelUnidades">
@@ -202,7 +202,7 @@
       <div class="card-main-info">
         <div class="icon-people">🧹</div>
         <div class="card-texts">
-          <span class="card-title">Aseo Comunal</span>
+          <span class="card-title">Aseo Comunal y Cuneteo</span>
           <span class="card-subtitle">68 personas</span>
         </div>
       </div>
@@ -212,7 +212,7 @@
       <p><strong>Encargado:</strong> Sebastián Carrillo</p>
       <p><strong>Funciones:</strong> Barrido y cuneteo avenidas principales.</p>
       <p><strong>Horario:</strong> Lu-Vi 08:00-17:20 | Sab 08:30-12:30</p>
-      <p><strong>Extras:</strong> Retiro cachureos, apoyo social.</p>
+      <p><strong>Observación:</strong> Sábado solo 8 personas. Verano 07:00-15:00.</p>
     </div>
   </div>
 
@@ -228,7 +228,7 @@
       <button class="toggle-btn" data-target="#unidad-2">+</button>
     </div>
     <div class="card-details" id="unidad-2">
-      <p><strong>Funciones:</strong> Camión barredor (lavado/absorción).</p>
+      <p><strong>Funciones:</strong> Operación camión barredor.</p>
       <p><strong>Horario:</strong> Lu-Vi 07:00 - 23:00</p>
     </div>
   </div>
@@ -245,8 +245,8 @@
       <button class="toggle-btn" data-target="#unidad-3">+</button>
     </div>
     <div class="card-details" id="unidad-3">
-      <p><strong>Funciones:</strong> Limpieza post-ferias.</p>
-      <p><strong>Horario:</strong> Ma-Do 15:00 - 22:00</p>
+      <p><strong>Funciones:</strong> Limpieza post ferias libres.</p>
+      <p><strong>Horario:</strong> Ma-Do 15:00 - 20:00 / 22:00</p>
     </div>
   </div>
   
@@ -263,7 +263,7 @@
     </div>
     <div class="card-details" id="unidad-4">
       <p><strong>Funciones:</strong> Supervisión recolección basura.</p>
-      <p><strong>Horario:</strong> Lu-Sa 08:30 - 17:20</p>
+      <p><strong>Horario:</strong> Lu-Sa 08:30 - 17:20 (Sab hasta 13:00)</p>
     </div>
   </div>
 
@@ -280,27 +280,89 @@
     </div>
     <div class="card-details" id="unidad-5">
       <p><strong>Funciones:</strong> Barrido centro y plazas.</p>
-      <p><strong>Horario:</strong> Turnos rotativos Lu-Do (07:00 a 22:00)</p>
+      <p><strong>Horario:</strong> Turnos rotativos 07:00 - 22:00</p>
     </div>
   </div>
 
-   <div style="text-align:center; padding:20px; color:#888;">
-     <small>... Más unidades disponibles ...</small>
-   </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info">
+        <div class="icon-people">🌙</div>
+        <div class="card-texts">
+          <span class="card-title">Aseo Nocturno</span>
+          <span class="card-subtitle">9 personas</span>
+        </div>
+      </div>
+      <button class="toggle-btn" data-target="#unidad-6">+</button>
+    </div>
+    <div class="card-details" id="unidad-6">
+      <p><strong>Días:</strong> Lunes a Domingo</p>
+      <p><strong>Horario:</strong> 21:00 a 04:00</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info">
+        <div class="icon-people">🚿</div>
+        <div class="card-texts">
+          <span class="card-title">Lavado de Aceras</span>
+          <span class="card-subtitle">5 personas</span>
+        </div>
+      </div>
+      <button class="toggle-btn" data-target="#unidad-7">+</button>
+    </div>
+    <div class="card-details" id="unidad-7">
+      <p><strong>Días:</strong> Domingo a Jueves</p>
+      <p><strong>Horario:</strong> 21:00 a 04:00</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info">
+        <div class="icon-people">🏭</div>
+        <div class="card-texts">
+          <span class="card-title">Sobreproducción</span>
+          <span class="card-subtitle">5 personas</span>
+        </div>
+      </div>
+      <button class="toggle-btn" data-target="#unidad-8">+</button>
+    </div>
+    <div class="card-details" id="unidad-8">
+      <p><strong>Funciones:</strong> Gestión locales > 1800 L/mes.</p>
+      <p><strong>Horario:</strong> Lu-Vi 08:15 a 17:20</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info">
+        <div class="icon-people">🌜</div>
+        <div class="card-texts">
+          <span class="card-title">RSD Nocturno</span>
+          <span class="card-subtitle">1 persona</span>
+        </div>
+      </div>
+      <button class="toggle-btn" data-target="#unidad-9">+</button>
+    </div>
+    <div class="card-details" id="unidad-9">
+      <p><strong>Días:</strong> Lunes a Domingo</p>
+      <p><strong>Horario:</strong> 18:00 a 02:00</p>
+    </div>
+  </div>
 
 </div>
 
 <div id="modalBg">
   <div id="modalCard">
     <div id="closeModal">✕</div>
-    <div id="modalContent" class="modal-content">
-      </div>
+    <div id="modalContent" class="modal-content"></div>
   </div>
 </div>
 
-
 <script>
-/* --- Lógica de Menús --- */
+/* --- Lógica Menús --- */
 const btnMenu = document.getElementById("btnMenu");
 const sideMenu = document.getElementById("sideMenu");
 const overlayBg = document.getElementById("overlayBg");
@@ -318,41 +380,35 @@ function toggleMenu(show) {
     overlayBg.classList.remove('show');
   }
 }
-
 btnMenu.onclick = () => toggleMenu(true);
 overlayBg.onclick = () => toggleMenu(false);
 
 btnUnidades.onclick = () => {
-  sideMenu.classList.remove('show'); // Esconde el menú principal
-  panelUnidades.classList.add('show'); // Muestra el derecho
-  overlayBg.classList.add('show'); // Mantiene el fondo oscuro
+  sideMenu.classList.remove('show');
+  panelUnidades.classList.add('show');
+  overlayBg.classList.add('show');
 };
-
 closeUnidades.onclick = () => {
   panelUnidades.classList.remove('show');
   overlayBg.classList.remove('show');
 };
 
-/* --- Lógica de Acordeón (Tarjetas) --- */
+/* --- Lógica Acordeón --- */
 document.querySelectorAll('.toggle-btn').forEach(b => {
   b.onclick = () => {
     let t = document.querySelector(b.dataset.target);
     let isOpen = t.classList.contains('show');
-    // Cerrar otros si quieres (opcional)
-    // document.querySelectorAll('.card-details').forEach(d=>d.classList.remove('show'));
     if(!isOpen) {
       t.classList.add('show');
-      b.textContent = "−";
-      b.style.color = "red";
+      b.textContent = "−"; b.style.color = "red";
     } else {
       t.classList.remove('show');
-      b.textContent = "+";
-      b.style.color = "#007aff";
+      b.textContent = "+"; b.style.color = "#007aff";
     }
   };
 });
 
-/* --- Lógica de Personal (Google Sheets) --- */
+/* --- Lógica Personal --- */
 const btnPersonal = document.getElementById("btnPersonal");
 const submenuPersonal = document.getElementById("submenuPersonal");
 const searchBox = document.getElementById("personalSearchContainer");
@@ -361,7 +417,7 @@ btnPersonal.onclick = () => {
   let isVisible = submenuPersonal.style.display === "block";
   submenuPersonal.style.display = isVisible ? "none" : "block";
   searchBox.style.display = isVisible ? "none" : "block";
-  if (!isVisible && !window._rows) cargarPersonal(); // Carga solo si es necesario
+  if (!isVisible && !window._rows) cargarPersonal();
 };
 
 async function cargarPersonal() {
@@ -371,7 +427,6 @@ async function cargarPersonal() {
     const txt = await resp.text();
     const rows = txt.trim().split("\n").map(r => r.split(","));
     window._rows = rows;
-    
     renderLista(rows);
   } catch (e) {
     submenuPersonal.innerHTML = "<li style='color:red'>Error cargando datos.</li>";
@@ -380,20 +435,17 @@ async function cargarPersonal() {
 
 function renderLista(rows) {
   submenuPersonal.innerHTML = "";
-  // Empezamos de i=1 para saltar cabecera
   for(let i=1; i<rows.length; i++) {
     if(rows[i][0]) {
       let li = document.createElement("li");
-      // Asumiendo col 0,1,2 son nombres
-      let nombreCompleto = `${rows[i][0]} ${rows[i][1]} ${rows[i][2]}`.replace(/undefined/g,'');
-      li.textContent = nombreCompleto;
+      let nombre = `${rows[i][0]} ${rows[i][1]} ${rows[i][2]}`.replace(/undefined/g,'');
+      li.textContent = nombre;
       li.onclick = () => abrirModalFuncionario(rows[i]);
       submenuPersonal.appendChild(li);
     }
   }
 }
 
-// Filtro de búsqueda
 document.getElementById("searchPersonal").oninput = function() {
   let filtro = this.value.toLowerCase();
   let items = submenuPersonal.getElementsByTagName("li");
@@ -402,35 +454,28 @@ document.getElementById("searchPersonal").oninput = function() {
   }
 };
 
-/* --- Lógica de MODAL (Popup) --- */
+/* --- Modal Funcionario --- */
 const modalBg = document.getElementById("modalBg");
 const modalContent = document.getElementById("modalContent");
 const closeModal = document.getElementById("closeModal");
 
 function abrirModalFuncionario(data) {
-  // Construimos el HTML del modal dinámicamente
-  // Ajusta los índices [x] según tu CSV real
   let html = `
     <h2>${data[0]} ${data[1]}</h2>
     <h4>${data[2] || ''}</h4>
-    
     <div class="modal-row"><strong>RUT:</strong> <span>${data[3]}</span></div>
-    <div class="modal-row"><strong>Edad:</strong> <span>${data[4]} años</span></div>
+    <div class="modal-row"><strong>Edad:</strong> <span>${data[4]}</span></div>
     <div class="modal-row"><strong>F. Nac:</strong> <span>${data[5]}</span></div>
+    <div class="modal-row"><strong>Mutual:</strong> <span>${data[6]}</span></div>
     <div class="modal-row"><strong>Teléfono:</strong> <span style="color:#007aff">${data[7]}</span></div>
     <div class="modal-row"><strong>Dirección:</strong> <span>${data[8]}</span></div>
     <div class="modal-row"><strong>Emergencia:</strong> <span>${data[9]}</span></div>
-    <div class="modal-row"><strong>Salud:</strong> <span>${data[10] || 'S/Info'}</span></div>
+    <div class="modal-row"><strong>Salud:</strong> <span>${data[10] || '-'}</span></div>
     <div class="modal-row"><strong>Contrato:</strong> <span>${data[11]}</span></div>
   `;
-  
   modalContent.innerHTML = html;
-  
   modalBg.style.display = "flex";
-  // Pequeño delay para la animación de opacidad
   setTimeout(() => modalBg.classList.add('show'), 10);
-  
-  // Cerrar menú lateral si está abierto
   toggleMenu(false);
 }
 
@@ -438,17 +483,13 @@ closeModal.onclick = () => {
   modalBg.classList.remove('show');
   setTimeout(() => modalBg.style.display = "none", 200);
 };
-
-// Cerrar modal al tocar fondo oscuro
 modalBg.onclick = (e) => {
   if(e.target === modalBg) closeModal.click();
 }
-
 </script>
 
 </body>
 </html>
-
 
 
 
