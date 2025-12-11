@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,9 +16,11 @@
   /* URL insertada: https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F */
   iframe { border: 0; width: 100%; height: 100%; display: block; }
   
-  /* *** CORRECCIÓN: Botón Menú Flotante (IZQUIERDA) *** */
+  /* *** CORRECCIÓN: Botón Menú Flotante BAJADO *** */
   .menu-btn {
-    position: fixed; top: 15px; left: 15px; /* Mantenido a la izquierda */
+    position: fixed; 
+    top: 70px; /* <-- CAMBIO CLAVE: BAJADO A 70px */
+    left: 15px; 
     background: #111; color: #fff;
     width: 45px; height: 45px;
     display: flex; justify-content: center; align-items: center;
@@ -26,9 +29,9 @@
     z-index: 1000; cursor: pointer; transition: transform 0.2s;
   }
 
-  /* *** CORRECCIÓN: Menú Lateral (DERECHA) *** */
+  /* Menú Lateral DERECHO (Sin cambios en diseño compacto) */
   .side-menu {
-    position: fixed; top: 0; right: -280px; /* Oculto a la derecha */
+    position: fixed; top: 0; right: -280px; /* Se oculta a la derecha */
     width: 280px; height: 100%;
     background: rgba(17, 17, 17, 0.95);
     backdrop-filter: blur(10px);
@@ -58,7 +61,7 @@
   .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s; }
   .overlay-bg.show { display: block; opacity: 1; }
   #panelUnidades {
-    position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; /* Mantenido a la derecha */
+    position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; 
     background: #f5f5f7; color: #000; z-index: 2000; overflow-y: auto;
     padding: 15px 15px 80px 15px; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: -2px 0 10px rgba(0,0,0,0.2);
@@ -66,7 +69,7 @@
   #panelUnidades.show { right: 0; }
   .close-panel { font-size: 24px; padding: 5px; cursor: pointer; background: #e1e1e1; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;}
 
-  /* *** RESTAURADO: Tarjetas (Compactas) *** */
+  /* Tarjetas (Compactas) */
   .card { background: #fff; border-radius: 12px; padding: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
   .card-header { display: flex; justify-content: space-between; align-items: center; }
   .card-main-info { display: flex; align-items: center; gap: 10px; }
@@ -79,7 +82,7 @@
   .card-details.show { display: block; }
   .card-details p { margin: 4px 0; }
 
-  /* Modal Funcionario (Estilos compactos restaurados) */
+  /* Modal Funcionario */
   #modalBg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 99999; opacity: 0; transition: opacity 0.2s; }
   #modalBg.show { opacity: 1; }
   #modalCard { background: #fff; width: 85%; max-width: 340px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; transform: scale(0.9); transition: transform 0.2s; }
@@ -280,7 +283,7 @@ btnPersonal.onclick = () => {
 
 async function cargarPersonal() {
   try {
-    // URL de tu Google Sheet publicada en formato CSV (sin cambios aquí)
+    // URL de tu Google Sheet publicada en formato CSV 
     const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRe9KYpZHsb2Wnc5nYXNSGgHfhdq8-iEPjh8CmlnPewhm6xdB6BQbFLsiIi2SlnnABaU8nEalZobyl1/pub?output=csv";
     const resp = await fetch(url);
     const txt = await resp.text();
@@ -348,10 +351,6 @@ cargarPersonal();
 
 </body>
 </html>
-
-
-
-
 
 
 
