@@ -7,19 +7,19 @@
 <title>Aseo_Dimao PRO</title>
 <style>
 body{margin:0;font-family:system-ui;background:#f5f5f7;}
-.menu-btn{position:fixed;top:16px;right:16px;background:#111;color:#fff;padding:12px;border-radius:10px;cursor:pointer;z-index:10000;}
-.side-menu{position:fixed;top:0;left:-260px;width:260px;height:100%;background:#111;color:#fff;padding:25px;transition:.3s;z-index:9999;overflow-y:auto;}
+.menu-btn{position:fixed;top:16px;right:16px;background:#fff;color:#111;border:2px solid #000;padding:12px;font-size:22px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.4);z-index:99999;cursor:pointer;}
+.side-menu{position:fixed;top:0;left:-260px;width:260px;height:70vh;background:#111;color:#fff;padding:25px;transition:.3s;z-index:9999;overflow-y:auto;}
 .side-menu.show{left:0;}
 .side-menu ul{list-style:none;padding:0;}
 .side-menu li{padding:14px 0;border-bottom:1px solid #333;cursor:pointer;}
 #personalSearchContainer input{width:100%;padding:10px;border-radius:8px;border:none;background:#222;color:#fff;}
-#panelUnidades {position:fixed;top:0;right:-100%;width:100%;max-width:480px;height:100%;background:#111;color:#fff;z-index:9998;overflow-y:auto;padding:20px;transition:right .3s; z-index:99999; }
+#panelUnidades {position:fixed;top:0;right:-100%;width:100%;max-width:480px;height:70vh;background:#111;color:#fff;z-index:9998;overflow-y:auto;padding:20px;transition:right .3s; z-index:99999; }
 #panelUnidades.show{right:0;}
 .close-panel{font-size:28px;margin-bottom:20px;cursor:pointer;}
 .card{background:#fff;color:#000;border-radius:16px;padding:12px;margin-bottom:12px;}
 .card-details{display:none;background:#f3f3f8;padding:10px;border-radius:10px;margin-top:10px;}
 .card-details.show{display:block;}
-.icon-people{width:32px;height:32px;border-radius:50%;background:#dceaff;display:flex;justify-content:center;align-items:center;}
+.icon-people{width:32px;height:70vh;border-radius:50%;background:#dceaff;display:flex;justify-content:center;align-items:center;}
 </style>
 </head>
 <body>
@@ -44,7 +44,7 @@ body{margin:0;font-family:system-ui;background:#f5f5f7;}
 
 <div style="margin-top:60px;">
 <iframe src="https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F" 
-style="position:relative;z-index:1;border:0;width:100%;height:calc(100vh - 60px);"></iframe>
+style="position:relative;z-index:1;border:0;width:100%;height:70vh;"></iframe>
 </div>
 
 <div id="panelUnidades">
@@ -329,9 +329,40 @@ document.querySelectorAll('.toggle-btn').forEach(b=>{
 cargarPersonal();
 </script>
 
+
+<div id="modalBg" style="position:fixed;top:0;left:0;width:100%;height:70vh;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:100000;animation:fadeIn .25s ease-out;">
+  <div id="modalCard" style="background:#fff;color:#000;width:90%;max-width:380px;padding:20px;border-radius:14px;box-shadow:0 0 20px rgba(0,0,0,0.5);animation:fadeIn .25s ease-out;">
+    <div id="closeModal" style="text-align:right;font-size:24px;cursor:pointer;margin-bottom:10px;">✖</div>
+    <div id="modalContent">Cargando…</div>
+  </div>
+</div>
+<style>@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}</style>
+<script>
+function mostrarCard(r){
+  mostrarModal(`
+    <h2>${r[0]} ${r[1]} ${r[2]}</h2>
+    <p><strong>RUT:</strong> ${r[3]}</p>
+    <p><strong>Edad:</strong> ${r[4]}</p>
+    <p><strong>F. Nac:</strong> ${r[5]}</p>
+    <p><strong>Mutual:</strong> ${r[6]}</p>
+    <p><strong>Tel:</strong> ${r[7]}</p>
+    <p><strong>Dirección:</strong> ${r[8]}</p>
+    <p><strong>Emergencia:</strong> ${r[9]}</p>
+    <p><strong>Enfermedades:</strong> ${r[10]}</p>
+    <p><strong>Calidad Jurídica:</strong> ${r[11]}</p>
+  `);
+}
+function mostrarModal(html){
+ document.getElementById("modalContent").innerHTML = html;
+ document.getElementById("modalBg").style.display="flex";
+}
+document.addEventListener("click", e=>{
+ if(e.target.id==="closeModal"){document.getElementById("modalBg").style.display="none";}
+});
+</script>
+
 </body>
 </html>
-
 
 
 
