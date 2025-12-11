@@ -2,394 +2,352 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#111111">
 <title>Aseo_Dimao PRO</title>
 <style>
-body{margin:0;font-family:system-ui;background:#f5f5f7;}
+  /* --- Estilos de App Móvil --- */
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #eee; overflow: hidden; height: 100vh; width: 100vw; }
 
-/* *** CORRECCIÓN: Botón de menú flotante movido a la izquierda (deja libre la derecha para el botón de capas del mapa) *** */
-.menu-btn{
-    position:fixed;
-    top:16px;
-    left:16px; /* <-- Posición a la izquierda */
-    background:#fff;
-    color:#111;
-    border:2px solid #000;
-    padding:12px;
-    font-size:22px;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.4);
-    z-index:99999;
-    cursor:pointer;
-}
+  /* Contenedor principal del mapa a pantalla completa */
+  .map-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+  /* URL insertada: https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F */
+  iframe { border: 0; width: 100%; height: 100%; display: block; }
+  
+  /* *** CORRECCIÓN: Botón Menú Flotante (IZQUIERDA) *** */
+  .menu-btn {
+    position: fixed; top: 15px; left: 15px; /* Mantenido a la izquierda */
+    background: #111; color: #fff;
+    width: 45px; height: 45px;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 24px; border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 1000; cursor: pointer; transition: transform 0.2s;
+  }
 
-/* *** CORRECCIÓN: Menú lateral (side-menu) aparece ahora por la DERECHA *** */
-.side-menu{
-    position:fixed;
-    top:0;
-    right:-260px; /* <-- Posición inicial oculta a la derecha */
-    left:auto; /* Asegura que la posición sea absoluta a la derecha */
-    width:260px;
-    height:70vh;
-    background:#111;
-    color:#fff;
-    padding:25px;
-    transition:right .3s; /* <-- Transición de la derecha */
-    z-index:9999;
-    overflow-y:auto;
-}
-.side-menu.show{right:0; left:auto;} /* <-- Muestra a la derecha */
+  /* *** CORRECCIÓN: Menú Lateral (DERECHA) *** */
+  .side-menu {
+    position: fixed; top: 0; right: -280px; /* Oculto a la derecha */
+    width: 280px; height: 100%;
+    background: rgba(17, 17, 17, 0.95);
+    backdrop-filter: blur(10px);
+    color: #fff; padding: 20px;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2000; display: flex; flex-direction: column;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.5);
+  }
+  .side-menu.show { right: 0; } /* Muestra desde la derecha */
+  .side-menu h3 { margin-top: 0; font-size: 18px; opacity: 0.7; border-bottom: 1px solid #333; padding-bottom: 10px; }
+  
+  .side-menu ul { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
+  .side-menu li {
+    padding: 12px 0; border-bottom: 1px solid #333;
+    font-size: 15px; cursor: pointer; display: flex; align-items: center;
+  }
+  
+  /* Input búsqueda */
+  #personalSearchContainer { padding: 10px 0; border-bottom: 1px solid #333; }
+  #searchPersonal {
+    width: 100%; padding: 10px; border-radius: 8px;
+    border: none; background: #333; color: #fff; font-size: 14px;
+    outline: none;
+  }
 
-.side-menu ul{list-style:none;padding:0;}
-.side-menu li{padding:14px 0;border-bottom:1px solid #333;cursor:pointer;}
-#personalSearchContainer input{width:100%;padding:10px;border-radius:8px;border:none;background:#222;color:#fff;}
+  /* Overlay y Panel de Unidades (Derecha) */
+  .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s; }
+  .overlay-bg.show { display: block; opacity: 1; }
+  #panelUnidades {
+    position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; /* Mantenido a la derecha */
+    background: #f5f5f7; color: #000; z-index: 2000; overflow-y: auto;
+    padding: 15px 15px 80px 15px; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  }
+  #panelUnidades.show { right: 0; }
+  .close-panel { font-size: 24px; padding: 5px; cursor: pointer; background: #e1e1e1; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;}
 
-/* Panel Unidades también ajustado para aparecer por la derecha */
-#panelUnidades {
-    position:fixed;
-    top:0;
-    right:-100%;
-    width:100%;
-    max-width:480px;
-    height:70vh;
-    background:#111;
-    color:#fff;
-    z-index:9998;
-    overflow-y:auto;
-    padding:20px;
-    transition:right .3s; 
-    z-index:99999; 
-}
-#panelUnidades.show{right:0;}
+  /* *** RESTAURADO: Tarjetas (Compactas) *** */
+  .card { background: #fff; border-radius: 12px; padding: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  .card-header { display: flex; justify-content: space-between; align-items: center; }
+  .card-main-info { display: flex; align-items: center; gap: 10px; }
+  .icon-people { width: 36px; height: 36px; border-radius: 50%; background: #e3f2fd; color: #007aff; display: flex; justify-content: center; align-items: center; font-size: 18px; flex-shrink: 0; }
+  .card-texts { display: flex; flex-direction: column; }
+  .card-title { font-weight: 600; font-size: 14px; color: #000; }
+  .card-subtitle { font-size: 12px; color: #666; }
+  .toggle-btn { background: #f0f0f3; border: none; width: 30px; height: 30px; border-radius: 8px; font-weight: bold; color: #007aff; cursor: pointer; display: flex; align-items: center; justify-content: center;}
+  .card-details { display: none; background: #f9f9fc; padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 13px; line-height: 1.4; color: #444; }
+  .card-details.show { display: block; }
+  .card-details p { margin: 4px 0; }
 
-.close-panel{font-size:28px;margin-bottom:20px;cursor:pointer;}
-.card{background:#fff;color:#000;border-radius:16px;padding:12px;margin-bottom:12px;}
-.card-details{display:none;background:#f3f3f8;padding:10px;border-radius:10px;margin-top:10px;}
-.card-details.show{display:block;}
-.icon-people{width:32px;height:70vh;border-radius:50%;background:#dceaff;display:flex;justify-content:center;align-items:center;}
+  /* Modal Funcionario (Estilos compactos restaurados) */
+  #modalBg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 99999; opacity: 0; transition: opacity 0.2s; }
+  #modalBg.show { opacity: 1; }
+  #modalCard { background: #fff; width: 85%; max-width: 340px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; transform: scale(0.9); transition: transform 0.2s; }
+  #modalBg.show #modalCard { transform: scale(1); }
+  #closeModal { position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: #f0f0f3; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; color: #555; }
+  .modal-content h2 { margin: 0 0 5px 0; font-size: 18px; color: #111; }
+  .modal-content h4 { margin: 0 0 15px 0; font-size: 14px; color: #666; font-weight: normal; }
+  .modal-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 8px 0; font-size: 13px; }
+  .modal-row strong { color: #333; }
+  .modal-row span { color: #555; text-align: right; max-width: 60%; }
 </style>
 </head>
 <body>
 
+<div class="map-container">
+  <iframe src="https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F" allowfullscreen></iframe>
+</div>
+
+<div class="overlay-bg" id="overlayBg"></div>
 <div class="menu-btn" id="btnMenu">☰</div>
 
 <div class="side-menu" id="sideMenu">
-  <h3>Menú</h3>
+  <h3>DIMAO PRO</h3>
   <ul>
-    <li id="btnMapa">🗺️ Mapa General</li>
-    <li id="btnPersonal">👥 Personal ▾</li>
+    <li onclick="alert('El control de Capas está DENTRO del mapa (por seguridad de Google). Presiona el botón de Capas/Expandir en la esquina del mapa.')">🗺️ Capas (Usar control del Mapa)</li>
+    <li id="btnPersonal">👥 Personal (Buscar) ▾</li>
   </ul>
+  
   <div id="personalSearchContainer" style="display:none;">
-    <input id="searchPersonal" placeholder="Buscar funcionario...">
+    <input id="searchPersonal" type="text" placeholder="Escribe nombre...">
   </div>
-  <ul id="submenuPersonal" style="display:none;"></ul>
+  
+  <ul id="submenuPersonal" style="display:none; flex:1; overflow-y:auto;">
+    <li style="color:#777; font-size:12px; padding:10px;">Cargando lista...</li>
+  </ul>
+
   <ul>
     <li id="btnUnidades">🗂️ Unidades Operativas</li>
-    <li>📊 Estadísticas</li>
+    <li onclick="alert('Sección en desarrollo')">📊 Estadísticas</li>
   </ul>
-</div>
-
-<div style="margin-top:60px;">
-<iframe src="https://www.google.com/maps/d/u/0/embed?mid=16kUDVecW-2uOYXUZGlDrd9cESOIUnSE&ehbc=2E312F" 
-style="position:relative;z-index:1;border:0;width:100%;height:70vh;"></iframe>
+  <div style="margin-top:auto; font-size:11px; color:#555; text-align:center;">Versión 2.3 Compacta</div>
 </div>
 
 <div id="panelUnidades">
-  <div class="close-panel" id="closeUnidades">✖</div>
+  <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <h3 style="margin:0; color:#111; border:none; padding:0; opacity:1;">Unidades</h3>
+    <div class="close-panel" id="closeUnidades">✕</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info"><div class="icon-people">📁</div><div class="card-texts"><span class="card-title">Administrativo</span><span class="card-subtitle">10 personas</span></div></div>
+      <button class="toggle-btn" data-target="#unidad-0">+</button>
+    </div>
+    <div class="card-details" id="unidad-0"><p><strong>Encargado:</strong> Sebastián Carrillo</p><p><strong>Funciones:</strong> Atención, tickets, licitaciones, logística, compras, remuneraciones.</p><p><strong>Horario:</strong> Lu-Vi 08:30 - 17:20</p></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info"><div class="icon-people">🧹</div><div class="card-texts"><span class="card-title">Aseo Comunal y Cuneteo</span><span class="card-subtitle">68 personas</span></div></div>
+      <button class="toggle-btn" data-target="#unidad-1">+</button>
+    </div>
+    <div class="card-details" id="unidad-1"><p><strong>Encargado:</strong> Sebastián Carrillo</p><p><strong>Funciones:</strong> Barrido y cuneteo avenidas principales.</p><p><strong>Horario:</strong> Lu-Vi 08:00-17:20 | Sab 08:30-12:30</p><p><strong>Observación:</strong> Sábado solo 8 personas. Verano 07:00-15:00.</p></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info"><div class="icon-people">🚛</div><div class="card-texts"><span class="card-title">Barrido Mecanizado</span><span class="card-subtitle">4 personas</span></div></div>
+      <button class="toggle-btn" data-target="#unidad-2">+</button>
+    </div>
+    <div class="card-details" id="unidad-2"><p><strong>Funciones:</strong> Operación camión barredor.</p><p><strong>Horario:</strong> Lu-Vi 07:00 - 23:00</p></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info"><div class="icon-people">🍎</div><div class="card-texts"><span class="card-title">RSD Ferias</span><span class="card-subtitle">2 personas</span></div></div>
+      <button class="toggle-btn" data-target="#unidad-3">+</button>
+    </div>
+    <div class="card-details" id="unidad-3"><p><strong>Funciones:</strong> Limpieza post ferias libres.</p><p><strong>Horario:</strong> Ma-Do 15:00 - 20:00 / 22:00</p></div>
+  </div>
   
   <div class="card">
     <div class="card-header">
-      <div class="card-main-info">
-        <div class="icon-people">👥</div>
-        <div class="card-texts">
-          <span class="card-title">Equipo Administrativo</span>
-          <span class="card-subtitle">10 personas</span>
-        </div>
-      </div>
-      <button class="toggle-btn" data-target="#unidad-0">+</button>
+      <div class="card-main-info"><div class="icon-people">🗑️</div><div class="card-texts"><span class="card-title">RSD Domiciliario</span><span class="card-subtitle">5 personas</span></div></div>
+      <button class="toggle-btn" data-target="#unidad-4">+</button>
     </div>
-    <div class="card-details" id="unidad-0">
-      <p><strong>Departamento:</strong> Aseo</p>
-      <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-      <p><strong>Personas:</strong> 10</p>
-      <p><strong>Funciones:</strong> Atención telefónica, público, tickets, solicitudes, licitaciones, logística, compras, análisis de datos, remuneraciones, sobreproducción, terreno y secretaría.</p>
-      <p><strong>Días:</strong> Lunes a Viernes</p>
-      <p><strong>Horarios:</strong> 08:30 a 17:20</p>
-    </div>
+    <div class="card-details" id="unidad-4"><p><strong>Funciones:</strong> Supervisión recolección basura.</p><p><strong>Horario:</strong> Lu-Sa 08:30 - 17:20 (Sab hasta 13:00)</p></div>
   </div>
-<div class="card">
-  <div class="card-header">
-    <div class="card-main-info">
-      <div class="icon-people">👥</div>
-      <div class="card-texts">
-        <span class="card-title">Aseo Comunal y Cuneteo</span>
-        <span class="card-subtitle">68 personas</span>
-      </div>
-    </div>
-    <button class="toggle-btn" data-target="#unidad-1">+</button>
-  </div>
-  <div class="card-details" id="unidad-1">
-    <p><strong>Departamento:</strong> Aseo</p>
-    <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-    <p><strong>Personas:</strong> 68</p>
-    <p><strong>Funciones:</strong> Barrido, limpieza y cuneteo en avenidas principales.</p>
-    <p><strong>Días:</strong> Lunes a Viernes, Sábado</p>
-    <p><strong>Horarios:</strong> 08:00 a 17:20, sábado 08:30 a 12:30</p>
-    <p><strong>Derivadas:</strong><br>
-      • Apoyo a Acción Social (casos Diógenes)<br>
-      • Retiro de cachureos por solicitud
-    </p>
-    <p><strong>Observación:</strong> Sábado solo 8 personas. Horario verano: 07:00 a 15:00</p>
-  </div>
-</div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-main-info">
-      <div class="icon-people">👥</div>
-      <div class="card-texts">
-        <span class="card-title">Barrido Mecanizado</span>
-        <span class="card-subtitle">4 personas</span>
-      </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info"><div class="icon-people">🏙️</div><div class="card-texts"><span class="card-title">Aseo Centro</span><span class="card-subtitle">31 personas</span></div></div>
+      <button class="toggle-btn" data-target="#unidad-5">+</button>
     </div>
-    <button class="toggle-btn" data-target="#unidad-2">+</button>
+    <div class="card-details" id="unidad-5"><p><strong>Funciones:</strong> Barrido centro y plazas.</p><p><strong>Horario:</strong> Turnos rotativos 07:00 - 22:00</p></div>
   </div>
-  <div class="card-details" id="unidad-2">
-    <p><strong>Departamento:</strong> Aseo</p>
-    <p><strong>Encargado:</strong> Sebastián Carrillo</p>
-    <p><strong>Personas:</strong> 4</p>
-    <p><strong>Funciones:</strong> Operación de camión barredor (lavado, barrido, absorción).</p>
-    <p><strong>Días:</strong> Lunes a Viernes</p>
-    <p><strong>Horarios:</strong> 07:00 a 23:00</p>
-  </div>
-</div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-main-info">
-      <div class="icon-people">👥</div>
-      <div class="card-texts">
-        <span class="card-title">RSD Ferias</span>
-        <span class="card-subtitle">2 personas</span>
-      </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info"><div class="icon-people">🌙</div><div class="card-texts"><span class="card-title">Aseo Nocturno</span><span class="card-subtitle">9 personas</span></div></div>
+      <button class="toggle-btn" data-target="#unidad-6">+</button>
     </div>
-    <button class="toggle-btn" data-target="#unidad-3">+</button>
+    <div class="card-details" id="unidad-6"><p><strong>Días:</strong> Lunes a Domingo</p><p><strong>Horario:</strong> 21:00 a 04:00</p></div>
   </div>
-  <div class="card-details" id="unidad-3">
-    <p><strong>Departamento:</strong> Aseo</p>
-    <p><strong>Personas:</strong> 2</p>
-    <p><strong>Funciones:</strong> Limpieza posterior a ferias libres.</p>
-    <p><strong>Días:</strong> Martes a Domingo</p>
-    <p><strong>Horarios:</strong> 15:00 a 20:00 / 15:00 a 22:00</p>
-  </div>
-</div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-main-info">
-      <div class="icon-people">👥</div>
-      <div class="card-texts">
-        <span class="card-title">RSD</span>
-        <span class="card-subtitle">5 personas</span>
-      </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info"><div class="icon-people">🚿</div><div class="card-texts"><span class="card-title">Lavado de Aceras</span><span class="card-subtitle">5 personas</span></div></div>
+      <button class="toggle-btn" data-target="#unidad-7">+</button>
     </div>
-    <button class="toggle-btn" data-target="#unidad-4">+</button>
+    <div class="card-details" id="unidad-7"><p><strong>Días:</strong> Domingo a Jueves</p><p><strong>Horario:</strong> 21:00 a 04:00</p></div>
   </div>
-  <div class="card-details" id="unidad-4">
-    <p><strong>Funciones:</strong> Supervisión de recolección de basura domiciliaria.</p>
-    <p><strong>Días:</strong> Lunes a Sábado</p>
-    <p><strong>Horarios:</strong> 08:30 a 17:20 / Sábado 08:30 a 13:00</p>
-  </div>
-</div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-main-info">
-      <div class="icon-people">👥</div>
-      <div class="card-texts">
-        <span class="card-title">Aseo Centro</span>
-        <span class="card-subtitle">31 personas</span>
-      </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info"><div class="icon-people">🏭</div><div class="card-texts"><span class="card-title">Sobreproducción</span><span class="card-subtitle">5 personas</span></div></div>
+      <button class="toggle-btn" data-target="#unidad-8">+</button>
     </div>
-    <button class="toggle-btn" data-target="#unidad-5">+</button>
+    <div class="card-details" id="unidad-8"><p><strong>Funciones:</strong> Gestión locales > 1800 L/mes.</p><p><strong>Horario:</strong> Lu-Vi 08:15 a 17:20</p></div>
   </div>
-  <div class="card-details" id="unidad-5">
-    <p><strong>Funciones:</strong> Barrido y limpieza del centro y plaza.</p>
-    <p><strong>Días:</strong> Lunes a Domingo</p>
-    <p><strong>Horarios:</strong> 07:00-15:00 / 15:00-22:00 / 09:00-15:00 / 16:00-21:00</p>
-  </div>
-</div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-main-info">
-      <div class="icon-people">👥</div>
-      <div class="card-texts">
-        <span class="card-title">Aseo Nocturno</span>
-        <span class="card-subtitle">9 personas</span>
-      </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-main-info"><div class="icon-people">🌜</div><div class="card-texts"><span class="card-title">RSD Nocturno</span><span class="card-subtitle">1 persona</span></div></div>
+      <button class="toggle-btn" data-target="#unidad-9">+</button>
     </div>
-    <button class="toggle-btn" data-target="#unidad-6">+</button>
-  </div>
-  <div class="card-details" id="unidad-6">
-    <p><strong>Días:</strong> Lunes a Domingo</p>
-    <p><strong>Horario:</strong> 21:00 a 04:00</p>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-header">
-    <div class="card-main-info">
-      <div class="icon-people">👥</div>
-      <div class="card-texts">
-        <span class="card-title">Lavado de Aceras</span>
-        <span class="card-subtitle">5 personas</span>
-      </div>
-    </div>
-    <button class="toggle-btn" data-target="#unidad-7">+</button>
-  </div>
-  <div class="card-details" id="unidad-7">
-    <p><strong>Días:</strong> Domingo a Jueves</p>
-    <p><strong>Horario:</strong> 21:00 a 04:00</p>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-header">
-    <div class="card-main-info">
-      <div class="icon-people">👥</div>
-      <div class="card-texts">
-        <span class="card-title">Sobreproducción</span>
-        <span class="card-subtitle">5 personas</span>
-      </div>
-    </div>
-    <button class="toggle-btn" data-target="#unidad-8">+</button>
-  </div>
-  <div class="card-details" id="unidad-8">
-    <p><strong>Funciones:</strong> Gestión de locales que superan 1800 L/mes.</p>
-    <p><strong>Días:</strong> Lunes a Viernes</p>
-    <p><strong>Horario:</strong> 08:15 a 17:20</p>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-header">
-    <div class="card-main-info">
-      <div class="icon-people">👥</div>
-      <div class="card-texts">
-        <span class="card-title">RSD Nocturno</span>
-        <span class="card-subtitle">1 persona</span>
-      </div>
-    </div>
-    <button class="toggle-btn" data-target="#unidad-9">+</button>
-  </div>
-  <div class="card-details" id="unidad-9">
-    <p><strong>Días:</strong> Lunes a Domingo</p>
-    <p><strong>Horario:</strong> 18:00 a 02:00</p>
+    <div class="card-details" id="unidad-9"><p><strong>Días:</strong> Lunes a Domingo</p><p><strong>Horario:</strong> 18:00 a 02:00</p></div>
   </div>
 
 </div>
+
+<div id="modalBg">
+  <div id="modalCard">
+    <div id="closeModal">✕</div>
+    <div id="modalContent" class="modal-content"></div>
+  </div>
+</div>
+
 
 <script>
-// Referencias a los elementos
-const sideMenu = document.getElementById("sideMenu");
+/* --- 6. Lógica de Menús y Acordeón --- */
 const btnMenu = document.getElementById("btnMenu");
-const btnUnidades = document.getElementById("btnUnidades");
+const sideMenu = document.getElementById("sideMenu");
+const overlayBg = document.getElementById("overlayBg");
 const panelUnidades = document.getElementById("panelUnidades");
+const btnUnidades = document.getElementById("btnUnidades");
 const closeUnidades = document.getElementById("closeUnidades");
+const modalBg = document.getElementById("modalBg");
+const modalContent = document.getElementById("modalContent");
+const closeModal = document.getElementById("closeModal");
 
-// *** CORRECCIÓN JS: Usar toggle en el lado 'right' para el sideMenu ***
-btnMenu.onclick=()=>sideMenu.classList.toggle('show');
-
-// Lógica de paneles y unidades
-btnUnidades.onclick=()=>{panelUnidades.classList.add('show');};
-closeUnidades.onclick=()=>panelUnidades.classList.remove('show');
-
-document.getElementById("btnPersonal").onclick=function(){
-  let sub=document.getElementById("submenuPersonal");
-  let box=document.getElementById("personalSearchContainer");
-  let show=sub.style.display!=="block";
-  sub.style.display=show?"block":"none";
-  box.style.display=show?"block":"none";
-};
-
-async function cargarPersonal(){
-  const url="https://docs.google.com/spreadsheets/d/e/2PACX-1vRe9KYpZHsb2Wnc5nYXNSGgHfhdq8-iEPjh8CmlnPewhm6xdB6BQbFLsiIi2SlnnABaU8nEalZobyl1/pub?output=csv";
-  try {
-    const resp=await fetch(url); const txt=await resp.text();
-    const rows=txt.trim().split("\n").map(r=>r.split(","));
-    window._rows=rows;
-    const sub=document.getElementById("submenuPersonal");
-    sub.innerHTML="";
-    for(let i=1;i<rows.length;i++) if(rows[i][0]) {
-      let li=document.createElement("li");
-      li.textContent=rows[i][0]+" "+rows[i][1]+" "+rows[i][2];
-      li.dataset.i=i;
-      li.onclick=()=>mostrarCard(rows[i]);
-      sub.appendChild(li);
-    }
-  } catch(e) {
-    document.getElementById("submenuPersonal").innerHTML = "<li>Error al cargar el personal.</li>";
+function toggleMenu(show) {
+  if(show) {
+    sideMenu.classList.add('show');
+    overlayBg.classList.add('show');
+  } else {
+    sideMenu.classList.remove('show');
+    panelUnidades.classList.remove('show');
+    overlayBg.classList.remove('show');
   }
 }
 
+btnMenu.onclick = () => toggleMenu(true);
+overlayBg.onclick = () => toggleMenu(false);
 
-function mostrarCard(r){
-  mostrarModal(`
-    <h2>${r[0]} ${r[1]} ${r[2]}</h2>
-    <p><strong>RUT:</strong> ${r[3]}</p>
-    <p><strong>Edad:</strong> ${r[4]}</p>
-    <p><strong>F. Nac:</strong> ${r[5]}</p>
-    <p><strong>Mutual:</strong> ${r[6]}</p>
-    <p><strong>Tel:</strong> ${r[7]}</p>
-    <p><strong>Dirección:</strong> ${r[8]}</p>
-    <p><strong>Emergencia:</strong> ${r[9]}</p>
-    <p><strong>Enfermedades:</strong> ${r[10]}</p>
-    <p><strong>Calidad Jurídica:</strong> ${r[11]}</p>
-  `);
-}
-
-function mostrarModal(html){
- document.getElementById("modalContent").innerHTML = html;
- document.getElementById("modalBg").style.display="flex";
-}
-document.addEventListener("click", e=>{
- if(e.target.id==="closeModal" || e.target.id==="modalBg"){
-  document.getElementById("modalBg").style.display="none";
- }
-});
-
-
-document.getElementById("searchPersonal").oninput=function(){
-  let f=this.value.toLowerCase();
-  document.querySelectorAll("#submenuPersonal li").forEach(li=>{
-    li.style.display=li.textContent.toLowerCase().includes(f)?"block":"none";
-  });
+btnUnidades.onclick = () => {
+  sideMenu.classList.remove('show');
+  panelUnidades.classList.add('show');
+  overlayBg.classList.add('show');
+};
+closeUnidades.onclick = () => {
+  panelUnidades.classList.remove('show');
+  overlayBg.classList.remove('show');
 };
 
-document.querySelectorAll('.toggle-btn').forEach(b=>{
-  b.onclick=()=>{
-    let t=document.querySelector(b.dataset.target);
-    let o=t.classList.contains('show');
-    t.classList.toggle('show'); b.textContent=o?"+":"−";
+document.querySelectorAll('.toggle-btn').forEach(b => {
+  b.onclick = () => {
+    let t = document.querySelector(b.dataset.target);
+    let isOpen = t.classList.contains('show');
+    t.classList.toggle('show');
+    b.textContent = isOpen ? "+" : "−"; 
+    b.style.color = isOpen ? "#007aff" : "red";
   };
 });
 
+
+/* --- 7. Lógica Personal (Funcionario) --- */
+const btnPersonal = document.getElementById("btnPersonal");
+const submenuPersonal = document.getElementById("submenuPersonal");
+const searchBox = document.getElementById("personalSearchContainer");
+
+btnPersonal.onclick = () => {
+  let isVisible = submenuPersonal.style.display === "block";
+  submenuPersonal.style.display = isVisible ? "none" : "block";
+  searchBox.style.display = isVisible ? "none" : "block";
+  if (!isVisible && !window._rows) cargarPersonal();
+};
+
+async function cargarPersonal() {
+  try {
+    // URL de tu Google Sheet publicada en formato CSV (sin cambios aquí)
+    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRe9KYpZHsb2Wnc5nYXNSGgHfhdq8-iEPjh8CmlnPewhm6xdB6BQbFLsiIi2SlnnABaU8nEalZobyl1/pub?output=csv";
+    const resp = await fetch(url);
+    const txt = await resp.text();
+    const rows = txt.trim().split("\n").map(r => r.split(","));
+    window._rows = rows;
+    renderLista(rows);
+  } catch (e) {
+    submenuPersonal.innerHTML = "<li style='color:red; padding:10px;'>Error cargando datos. Asegúrate que la hoja de cálculo esté Publicada.</li>";
+  }
+}
+
+function renderLista(rows) {
+  submenuPersonal.innerHTML = "";
+  for(let i=1; i<rows.length; i++) {
+    if(rows[i][0]) {
+      let li = document.createElement("li");
+      let nombre = `${rows[i][0]} ${rows[i][1]} ${rows[i][2]}`.replace(/undefined/g,'');
+      li.textContent = nombre;
+      li.onclick = () => abrirModalFuncionario(rows[i]);
+      submenuPersonal.appendChild(li);
+    }
+  }
+}
+
+document.getElementById("searchPersonal").oninput = function() {
+  let filtro = this.value.toLowerCase();
+  let items = submenuPersonal.getElementsByTagName("li");
+  for (let item of items) {
+    item.style.display = item.textContent.toLowerCase().includes(filtro) ? "flex" : "none";
+  }
+};
+
+function abrirModalFuncionario(data) {
+  // Las columnas están mapeadas al mismo orden de tu hoja de cálculo
+  let html = `
+    <h2>${data[0]} ${data[1]}</h2>
+    <h4>${data[2] || ''}</h4>
+    <div class="modal-row"><strong>RUT:</strong> <span>${data[3]}</span></div>
+    <div class="modal-row"><strong>Edad:</strong> <span>${data[4]}</span></div>
+    <div class="modal-row"><strong>F. Nac:</strong> <span>${data[5]}</span></div>
+    <div class="modal-row"><strong>Mutual:</strong> <span>${data[6]}</span></div>
+    <div class="modal-row"><strong>Teléfono:</strong> <span style="color:#007aff">${data[7]}</span></div>
+    <div class="modal-row"><strong>Dirección:</strong> <span>${data[8]}</span></div>
+    <div class="modal-row"><strong>Emergencia:</strong> <span>${data[9]}</span></div>
+    <div class="modal-row"><strong>Salud:</strong> <span>${data[10] || '-'}</span></div>
+    <div class="modal-row"><strong>Contrato:</strong> <span>${data[11]}</span></div>
+  `;
+  modalContent.innerHTML = html;
+  modalBg.style.display = "flex";
+  setTimeout(() => modalBg.classList.add('show'), 10);
+  toggleMenu(false);
+}
+
+closeModal.onclick = () => {
+  modalBg.classList.remove('show');
+  setTimeout(() => modalBg.style.display = "none", 200);
+};
+modalBg.onclick = (e) => {
+  if(e.target === modalBg) closeModal.click();
+}
+
 cargarPersonal();
+
 </script>
-
-
-<div id="modalBg" style="position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:100000;animation:fadeIn .25s ease-out;">
-  <div id="modalCard" style="background:#fff;color:#000;width:90%;max-width:380px;padding:20px;border-radius:14px;box-shadow:0 0 20px rgba(0,0,0,0.5);animation:fadeIn .25s ease-out;">
-    <div id="closeModal" style="text-align:right;font-size:24px;cursor:pointer;margin-bottom:10px;">✖</div>
-    <div id="modalContent">Cargando…</div>
-  </div>
-</div>
-<style>@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}</style>
 
 </body>
 </html>
-
 
 
 
